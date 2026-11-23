@@ -1,0 +1,25 @@
+ano,squad,desafio,solucao,status,estabelecimento,observacao
+2021,Heróis da Inovação,,Liberação Automática Whatsapp,Implantada,Operadora,Esta em uso com a Julia (consome API interna)
+2021,007 Agentes de Inovação,,ChatBot Contratante PJ,Implantada,Operadora,Falar com a Mariana
+2022,Inovolution 6.22,Visitante e acompanhante tem que pegar senha e fazer cadastro a cada entrada no HGU,Totem/App Visitantes HGU,Implantada,HGU,Em uso
+2022,7 Minds,Redução de custos com impressão - Projeto Zero Papel - Estudo de viabilidade de implantação de certificados digitais aos colaboradores (assinaturas digitais),Implantar Time Sustentabilidade,Não iniciada,Institucional,
+2022,Iluminova,Utilização indiscriminada por falta de consulta eletivas e falta de informação e orientação continuada nas empresas,Plano Contigência Tempo Atendimento Acionado via WhatsApp,Cancelada,HGU,
+2022,Ativamente,Cumprimento dos Prazos Máximos de Atendimento RN nº259 e RN nº395,Painel Gestão Liberação Intercâmbio,Implantada,Operadora,
+2022,Liga da Inovação,"Após a contratação do plano de saúde, entendo que o cliente poderia conhecer ele de forma interativa e esclarecendo todos os serviços que ele terá acesso ou utilização. Trazer de forma educativa, sustentável sem uso indiscriminado.",ChatBot FAQ uso do Plano,Não iniciada,Operadora,
+2022,Luz da Inovação,"Plano rápido de resposta ao cliente e à imprensa diante de crises ou problemas que impactam a imagem, reputação e credibilidade da Unimed Ponta Grossa.",Gestão de Crise - Fluxo de Identificação,Não iniciada,HGU,
+2023,Impulsum,Espera prolongada para atendimento aos pacientes que irão realizar exames laboratoriais,Reestruturação da escala de trabalho,Implantada,Laboratório,"Validado o piloto, porém o setor não aderiu."
+2023,Squad Delas,Dificuldade de rede para serviços de terapias especiais,,Cancelada,Operadora,
+2023,I-Team,Dificuldade no monitoramento da experiência do beneficiário após atendimento prestado pela rede credenciada,NPS Aplicativo Unimed Cliente PR,Implantada,Operadora,Em uso
+2024,UniPlus,Melhoria da Comunicação e Acessibilidade aos Processos do Hospital,Unificação das opções no app cooperado,Não iniciada,HGU,Vincular a solução no projeto Jornada do Cooperado
+2024,UniGirls,"Falta de codificação nos procedimentos solicitados pelos cooperados, impactando diretamente as liberações das guias","Dash para acompanhamento das liberações por canais, app cooperado com tabela TUSS e RPU para notificação do processo sem código",Implantada,Operadora,Em uso
+2024,Meteoro da Inovação,"Falta de visualização na Jornada da Conta, gestão de guias e autorizações",Dash para monitoramento da etapa da conta,Implantada,Operadora,Em uso
+2024,UniCuidar,"Melhorar a experiência dos beneficiários em tratamentos contínuos, tornando os processos mais eficientes e centralizados",IA para leitura dos exames de imagem apoiando no diagnóstico,Implantada,HGU,Aguardando retorno da validação pela área
+2025,Eureka,"Como redesenhar a jornada hospitalar administrativa para ser mais eficiente, encantadora e centrada no paciente?",Pré Internação Online / Check-list Digital,Não iniciada,HGU,
+2025,Gaters,Criar um modelo de auditoria de contas de terapias especiais utilizando IA,AuditAI,Não iniciada,Operadora,
+2025,IAvengers,Desenvolver ferramenta de IA para orientar colaboradores e pacientes sobre exames laboratoriais e de imagem com códigos TUSS atualizados,Plataforma Web de Orientações para exames laboratoriais,Não iniciada,Laboratório,
+2025,Ministério do Faturamento,"Como garantir uma jornada de faturamento hospitalar mais limpa, integrada e eficiente, com redução de glosas, retrabalho e tempo?",UniCheck,Em andamento,Operadora,Em pesquisa através da iniciativa Radar de Inovação; levantamento da matriz de critérios realizado
+2025,Uniflix,"Como reduzir o tempo gasto com atividades administrativas, liberando mais horas para o cuidado direto dos beneficiários?",Univox IA Assist,Em andamento,HGU,Em validação com a área
+2026,Unintendo,Onboarding digital - Experiência de iniciar como beneficiário Unimed no ambiente digital.,,Não iniciada,Operadora,
+2026,Pit Stop Digital,Autonomia na liberação - Experiência de autonomia na autorização para que o beneficiário sinta controle.,,Não iniciada,ESU,
+2026,PA 360º,Presença no atendimento - Criar presença digital ativa durante o atendimento nos momentos de silêncio.,,Não iniciada,PA,
+2026,Amigo Estou Aqui,Continuidade pós-atendimento - Ser útil para o beneficiário também quando ele não está doente.,,Não iniciada,Operadora,

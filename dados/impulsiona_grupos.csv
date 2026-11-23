@@ -1,0 +1,13 @@
+codigo,modalidade,semestre,projeto,area_demandante,ativos,inativos,reunioes_realizadas,reunioes_nao_realizadas,reunioes_previstas,presenca,acompanhamento
+MEI-01,MEI-U,1ºS/2026,Homologa+ Blockchain,Operadora - Gestão de Prestadores,6,0,5,1,0,0.36666666666666664,
+MEI-02,MEI-U,1ºS/2026,Sistema de Monitoramento IDSS,Operadora - Contas Médicas,5,2,7,3,0,0.59375,
+MEI-03,MEI-U,1ºS/2026,UniCare – Sensores e Visão Computacional para Segurança Assistencial,Hospital Geral Unimed - Assistêncial,5,1,5,3,0,0.68,
+MEI-04,MEI-U,1ºS/2026,SHL – Registro em tempo real da limpeza dos leitos do hospital,Hospital Geral Unimed - SHL,4,2,7,0,0,0.37142857142857144,
+MEI-05,MEI-U,2ºS/2026,Assistência Móvel à Beira do Leito,Hospital Geral Unimed - Assistêncial,5,0,0,0,0,,Sem reuniões registradas
+MEI-06,MEI-U,2ºS/2026,Pontua Coop,Operadora - Núcleo do Cooperado,5,0,0,0,0,,Sem reuniões registradas
+MEI-07,MEI-U,2ºS/2026,Rastreabilidade Inteligente de Lotes de Reagentes Laboratoriais,Laboratórios Unimed - Operacional,6,0,0,0,0,,Sem reuniões registradas
+MEI-08,MEI-U,2ºS/2026,Robótica Assistida Hospitalar,Hospital Geral Unimed - Diretoria,7,0,0,0,0,,Sem reuniões registradas
+EXT-01,Disciplina de Extensão,1ºS/2025,Ciência de Dados – 1ºS/2025,Operadora - T.I,0,0,0,0,0,,
+EXT-02,Disciplina de Extensão,2ºS/2025,Ciência de Dados – 2ºS/2025,Hospital Geral Unimed - T.I,0,0,0,0,0,,
+EXT-03,Disciplina de Extensão,1ºS/2026,Ciência de Dados – 1ºS/2026,Operadora - Contabil Financeiro,0,0,3,0,0,0.8125,
+EXT-04,Disciplina de Extensão,2ºS/2026,Ciência de Dados – 2ºS/2026,Operadora - NIIS,18,0,0,0,3,,Sem reuniões registradas

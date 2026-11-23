@@ -1,0 +1,2 @@
+id,nome,tipo,origem,areas,gestor,etapa,priorizada,data_ultima_etapa,tipo_inovacao,beneficiario,tempo_antes_min,tempo_depois_min,volume_acumulado,evidencia,validado,indicador_resultado,resultado,observacoes
+P-000,EXEMPLO – Autorização automática de exames simples,Projeto,Equipe de inovação,Regulação,Gestor(a) da área,Piloto,Sim,2027-02-15,Incremental,Colaborador,6,1,35700,Relatório do sistema,Sim,Tempo de análise por guia,de 6 para 1 min por guia,Linha de exemplo: não entra nos indicadores. Substitua pelos projetos reais.
