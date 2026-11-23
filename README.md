@@ -46,7 +46,7 @@ dados/             CSVs anonimizados que alimentam o painel
 | `projetos_acoes.csv` | projetos | Registro de projetos e ações (a linha P-000 é exemplo) |
 | `historico_*.csv` | historico_catalogo, historico_mensal | Indicadores anteriores |
 
-Os arquivos não têm nomes, RA, contatos ou outros dados pessoais de alunos e colaboradores, nem nomes de analistas ou responsáveis. Mantenha o repositório **privado**: ele contém números internos, nomes de soluções e de empresas avaliadas.
+Os arquivos não têm nomes, RA, contatos ou outros dados pessoais de alunos e colaboradores, nem nomes de analistas ou responsáveis. O repositório e o site do GitHub Pages são públicos: os números internos, os nomes das soluções e das empresas avaliadas ficam visíveis para qualquer pessoa.
 
 ## Como atualizar
 
@@ -57,3 +57,15 @@ Os arquivos não têm nomes, RA, contatos ou outros dados pessoais de alunos e c
 ## Observação técnica
 
 `index.html` e os scripts usam a API do artefato de dados do Claude (`dash.calc`, `dash.draw`, `dash.data`) e o d3, fornecidos pelo ambiente do painel. Abertos direto no navegador, fora desse ambiente, eles não renderizam: este repositório serve de cópia de segurança e registro de versões.
+
+## Site no GitHub Pages
+
+A pasta `docs/` é uma versão do painel que roda fora do Claude, publicada pelo GitHub Pages. Ela usa `pages/dash-shim.js` no lugar da API do artefato e lê os CSVs de `docs/dados/`.
+
+Depois de mudar `painel/` ou `dados/`, gere o site de novo antes do commit:
+
+```
+python3 pages/build.py
+```
+
+O site é público: qualquer pessoa com o link vê todos os números e nomes do painel.

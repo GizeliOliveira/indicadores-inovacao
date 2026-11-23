@@ -1,0 +1,38 @@
+codigo,data,situacao,modalidade,semestre,alunos_lancados,presentes,presenca
+MEI-02,2026-04-06,Realizada,MEI-U,1ºS/2026,5,3,0.6
+MEI-03,2026-04-06,Realizada,MEI-U,1ºS/2026,5,3,0.6
+MEI-04,2026-04-08,Realizada,MEI-U,1ºS/2026,5,4,0.8
+MEI-01,2026-04-09,Realizada,MEI-U,1ºS/2026,6,3,0.5
+MEI-03,2026-04-13,Realizada,MEI-U,1ºS/2026,5,4,0.8
+MEI-02,2026-04-14,Realizada,MEI-U,1ºS/2026,5,4,0.8
+MEI-04,2026-04-14,Realizada,MEI-U,1ºS/2026,5,1,0.2
+MEI-04,2026-04-22,Realizada,MEI-U,1ºS/2026,5,2,0.4
+MEI-03,2026-04-27,Realizada,MEI-U,1ºS/2026,5,3,0.6
+MEI-01,2026-04-28,Realizada,MEI-U,1ºS/2026,6,3,0.5
+MEI-02,2026-04-28,Realizada,MEI-U,1ºS/2026,5,4,0.8
+EXT-03,2026-04-29,Realizada,Disciplina de Extensão,1ºS/2026,16,12,0.75
+MEI-01,2026-04-30,Realizada,MEI-U,1ºS/2026,6,3,0.5
+MEI-03,2026-05-04,Realizada,MEI-U,1ºS/2026,5,4,0.8
+MEI-02,2026-05-05,Não realizada,MEI-U,1ºS/2026,0,0,
+MEI-04,2026-05-06,Realizada,MEI-U,1ºS/2026,5,1,0.2
+MEI-03,2026-05-11,Não realizada,MEI-U,1ºS/2026,0,0,
+MEI-02,2026-05-12,Realizada,MEI-U,1ºS/2026,5,2,0.4
+MEI-01,2026-05-14,Realizada,MEI-U,1ºS/2026,6,1,0.16666666666666666
+MEI-03,2026-05-18,Realizada,MEI-U,1ºS/2026,5,3,0.6
+MEI-02,2026-05-19,Realizada,MEI-U,1ºS/2026,5,3,0.6
+MEI-04,2026-05-20,Realizada,MEI-U,1ºS/2026,5,2,0.4
+MEI-02,2026-05-26,Não realizada,MEI-U,1ºS/2026,0,0,
+EXT-03,2026-05-27,Realizada,Disciplina de Extensão,1ºS/2026,16,13,0.8125
+MEI-01,2026-05-28,Não realizada,MEI-U,1ºS/2026,0,0,
+MEI-03,2026-06-01,Não realizada,MEI-U,1ºS/2026,0,0,
+MEI-02,2026-06-02,Não realizada,MEI-U,1ºS/2026,0,0,
+MEI-04,2026-06-03,Realizada,MEI-U,1ºS/2026,5,2,0.4
+MEI-03,2026-06-08,Não realizada,MEI-U,1ºS/2026,0,0,
+MEI-02,2026-06-09,Realizada,MEI-U,1ºS/2026,5,1,0.2
+MEI-01,2026-06-11,Realizada,MEI-U,1ºS/2026,6,1,0.16666666666666666
+MEI-02,2026-06-15,Realizada,MEI-U,1ºS/2026,5,2,1
+MEI-04,2026-06-17,Realizada,MEI-U,1ºS/2026,5,1,0.2
+EXT-03,2026-06-24,Realizada,Disciplina de Extensão,1ºS/2026,16,14,0.875
+EXT-04,2026-10-07,Prevista,Disciplina de Extensão,2ºS/2026,0,0,
+EXT-04,2026-11-04,Prevista,Disciplina de Extensão,2ºS/2026,0,0,
+EXT-04,2026-12-02,Prevista,Disciplina de Extensão,2ºS/2026,0,0,

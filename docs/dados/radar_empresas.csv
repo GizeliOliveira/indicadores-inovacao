@@ -1,0 +1,61 @@
+id,id_ms,startup,solucao,tema,origem,situacao,n_pesquisas,pesquisas
+EMP-001,MS-2025-001,Abraço,Saúde Mental Corporativa,Saúde Mental e Terapias,Mapeamento de startups,Vinculada a pesquisa,1,PM-2026-011
+EMP-002,MS-2025-002,Amiko Soluções,Plataforma de Gestão em Saúde,Gestão Assistencial e Saúde Digital,Mapeamento de startups,Somente mapeada,0,
+EMP-003,MS-2025-003,Asten Suíte,Recepção Digital,Recepção e Jornada do Paciente,Mapeamento de startups,Somente mapeada,0,
+EMP-004,MS-2025-004,Avatar Saúde,Atendimento Digital e Teleassistência,Gestão Assistencial e Saúde Digital,Mapeamento de startups,Somente mapeada,0,
+EMP-005,MS-2025-005,Be3,Digitalização e Automação da Jornada do Paciente,Recepção e Jornada do Paciente,Mapeamento de startups,Vinculada a pesquisa,1,PM-2026-008
+EMP-006,MS-2025-006,Bio APS,Atenção Primária em Saúde Digital,Gestão Assistencial e Saúde Digital,Mapeamento de startups,Somente mapeada,0,
+EMP-007,MS-2025-007,Blue Rise Health Tech,Gestão de Dados em Saúde,"Dados, Automação e Tecnologia",Mapeamento de startups,Somente mapeada,0,
+EMP-008,MS-2025-008,Dígitro,Comunicação e Automação,"Dados, Automação e Tecnologia",Mapeamento de startups,Somente mapeada,0,
+EMP-009,MS-2025-009,ForSing,Recepção Digital,Recepção e Jornada do Paciente,Mapeamento de startups,Vinculada a pesquisa,1,PM-2025-001
+EMP-010,MS-2025-0010,Kompa Saúde,Plataforma digital de saúde integrada,Gestão Assistencial e Saúde Digital,Mapeamento de startups,Somente mapeada,0,
+EMP-011,MS-2025-0011,NeuroSteps,Reabilitação Cognitiva Digital (TEA),Saúde Mental e Terapias,Mapeamento de startups,Vinculada a pesquisa,1,PM-2026-011
+EMP-012,MS-2025-0012,SALUX,Soluções para Gestão Hospitalar,Gestão Hospitalar e Operações,Mapeamento de startups,Somente mapeada,0,
+EMP-013,MS-2025-0013,Grupo Espaço Saúde,Solução digital de atenção integral à saúde,Gestão Assistencial e Saúde Digital,Mapeamento de startups,Somente mapeada,0,
+EMP-014,MS-2025-0014,SISQUAL,Plataforma de Gestão de Escalas e Jornadas,Gestão de Pessoas e Capacitação,Mapeamento de startups,Somente mapeada,0,
+EMP-015,MS-2025-0015,Weecode,Formulários Eletrônicos Inteligentes,"Dados, Automação e Tecnologia",Mapeamento de startups,Vinculada a pesquisa,1,PM-2026-008
+EMP-016,MS-2025-0016,Zero Dox,Recepção Digital,Recepção e Jornada do Paciente,Mapeamento de startups,Selecionada/Recomendada em pesquisa,1,PM-2025-001
+EMP-017,MS-2025-0017,Z Future,Desenvol. Tecnológico de Curativos Biomiméticos Avançados,Materiais e Dispositivos Assistenciais,Mapeamento de startups,Somente mapeada,0,
+EMP-018,MS-2025-0018,TecFy,Automação e Soluções Digitais (Recepção Digital),Recepção e Jornada do Paciente,Mapeamento de startups,Vinculada a pesquisa,1,PM-2025-001
+EMP-019,MS-2025-0019,TEAjudo,Plataforma de Apoio ao TEA,Saúde Mental e Terapias,Mapeamento de startups,Selecionada/Recomendada em pesquisa,1,PM-2026-011
+EMP-020,MS-2025-0020,Techlinker,Plataforma Digital de Recrutamento e Seleção,Gestão de Pessoas e Capacitação,Mapeamento de startups,Somente mapeada,0,
+EMP-021,MS-2025-0021,Redesing,Design de Serviços e Inovação,Consultoria e Serviços de Inovação,Mapeamento de startups,Somente mapeada,0,
+EMP-022,MS-2025-0022,iTalents,Gestão de Talentos e Capacitação,Gestão de Pessoas e Capacitação,Mapeamento de startups,Somente mapeada,0,
+EMP-023,MS-2025-0023,Green,Recepção Digital,Recepção e Jornada do Paciente,Mapeamento de startups,Vinculada a pesquisa,1,PM-2025-001
+EMP-024,MS-2025-0024,Nilo,Gestão de Jornada do Paciente,Recepção e Jornada do Paciente,Mapeamento de startups,Somente mapeada,0,
+EMP-025,MS-2025-0025,SISNACMED,Dispensário Eletrônico,Farmácia e Dispensação,Mapeamento de startups,Vinculada a pesquisa,1,PM-2025-002
+EMP-026,MS-2025-0026,Engeclinic,Dispensário Eletrônico,Farmácia e Dispensação,Mapeamento de startups,Vinculada a pesquisa,1,PM-2025-002
+EMP-027,MS-2025-0027,RentBrella,Gestão de Guarda-Chuvas Inteligente,"Sustentabilidade, ESG e Marca",Mapeamento de startups,Vinculada a pesquisa,1,PM-2025-003
+EMP-028,MS-2025-0028,domy,Desenvol. de Soluções Digitais Sob Medida,Consultoria e Serviços de Inovação,Mapeamento de startups,Somente mapeada,0,
+EMP-029,MS-2025-0029,Dankia,Dispensário Eletrônico,Farmácia e Dispensação,Mapeamento de startups,Selecionada/Recomendada em pesquisa,1,PM-2025-002
+EMP-030,MS-2025-0030,Carefy,Plataforma de Gestão Assistencial,Gestão Assistencial e Saúde Digital,Mapeamento de startups,Vinculada a pesquisa,1,PM-2026-010
+EMP-031,,Smarttoten,Totens inteligentes com foco em comunicação e sustentabilidade,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-003
+EMP-032,,Purificatta,Purificação e acesso à água com apelo sustentável e de marca,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-003
+EMP-033,,VoltStation,Estação de carregamento digital (mobilidade elétrica),"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-003
+EMP-034,,STR Estruturas,Estação de carregamento solar,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-003
+EMP-035,,Meu Locker,Lockers eletrônicos com gestão em software,Infraestrutura e Controle de Acesso,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-004
+EMP-036,,Key Vigilant,Gabinetes eletrônicos para gestão de chaves e ativos,Infraestrutura e Controle de Acesso,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-004
+EMP-037,,ASSA ABLOY (HID Global / Arcade / Traka),Fechaduras eletrônicas sem fio Aperio + plataforma Vault Next,Infraestrutura e Controle de Acesso,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-004
+EMP-038,,Twygo,Plataforma de cursos corporativos,Gestão de Pessoas e Capacitação,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-005
+EMP-039,,Alura,Plataforma de cursos para empresas,Gestão de Pessoas e Capacitação,Pesquisa de mercado,Selecionada/Recomendada em pesquisa,1,PM-2025-005
+EMP-040,,Udemy Business,Plataforma de cursos para empresas,Gestão de Pessoas e Capacitação,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-005
+EMP-041,,Coursera,Plataforma de cursos e certificações,Gestão de Pessoas e Capacitação,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2025-005
+EMP-042,,Receiv,Plataforma de gestão de cobrança,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-043,,Cobmais,Plataforma de gestão de cobrança (Cobmais Pro),"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-044,,AquiCob – Acerte Aqui,Plataforma de cobrança e negociação,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-045,,Acordo Certo,Plataforma de negociação de dívidas,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-046,,Serasa Experian,Plataforma de cobrança,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-047,,Intervalor,Gestão de cobrança,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-048,,Negocie Online,Plataforma de negociação de dívidas,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-049,,Paschoalotto,Soluções de cobrança,"Financeiro, Cobrança e Orçamento",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-050,,Valença,Consultoria em cobrança,Consultoria e Serviços de Inovação,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-051,,Solut,Consultoria em cobrança,Consultoria e Serviços de Inovação,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-006
+EMP-052,,GIF,Plataforma digital de faturamento hospitalar,Faturamento e Ciclo da Receita,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-010
+EMP-053,,Bionexo,Ciclo da Receita (3 módulos),Faturamento e Ciclo da Receita,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-010
+EMP-054,,PIXEON,Faturamento hospitalar,Faturamento e Ciclo da Receita,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-010
+EMP-055,,RIVIO,Faturamento hospitalar com equipe própria,Faturamento e Ciclo da Receita,Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-010
+EMP-056,,marQ Consult,Balança + plataforma de gestão de resíduos,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-012
+EMP-057,,meuResíduo,Plataforma de gestão de resíduos,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-012
+EMP-058,,Vertown,Plataforma de gestão de resíduos,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-012
+EMP-059,,Recicla,Gestão de resíduos,"Sustentabilidade, ESG e Marca",Pesquisa de mercado,Vinculada a pesquisa,1,PM-2026-012
+EMP-060,,Granatt Consultoria e Assessoria,GTT Beira Leito — plataforma assistencial beira-leito integrada ao ERP,Gestão Assistencial e Saúde Digital,Relatório de solução,Somente mapeada,0,

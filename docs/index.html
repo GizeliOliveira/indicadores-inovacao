@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Indicadores da Inovação · Unimed Ponta Grossa</title>
+<link rel="stylesheet" href="tema.css">
+<script src="d3.min.js"></script>
+<script src="dash-shim.js"></script>
+</head>
+<body>
+<meta name="dash-one-writer">
+<style>
+.ip{font-family:var(--font-anthropic-sans);color:var(--color-fg);display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
+.ip h1{font-family:var(--font-anthropic-serif);font-weight:700;font-size:var(--cds-font-size-title);margin:0}
+.ip h2{font-size:var(--cds-font-size-heading);font-weight:var(--cds-font-weight-medium);margin:0 0 var(--cds-gap-xs)}
+.ip h3{font-size:var(--cds-font-size-body);font-weight:var(--cds-font-weight-medium);margin:0 0 var(--cds-gap-xs)}
+.ip p{margin:0}
+.ip-lede{color:var(--color-fg);max-width:70ch;line-height:1.5}
+.ip-lede b,.ip-note b{font-variant-numeric:tabular-nums}
+.ip-muted{color:var(--color-fg-muted);font-size:var(--cds-font-size-caption)}
+.ip-tabs{display:flex;flex-wrap:wrap;gap:var(--cds-gap-xs);border-bottom:1px solid var(--color-border-line);padding-bottom:var(--cds-gap-xs)}
+.ip-tab{font:inherit;font-size:var(--cds-font-size-body);background:none;border:1px solid transparent;border-radius:var(--cds-radius);padding:var(--cds-pad-xs) var(--cds-pad-sm);color:var(--color-fg-muted);cursor:pointer}
+.ip-tab[aria-selected=true]{color:var(--color-fg);background:var(--color-panel);border-color:var(--color-border-line);font-weight:var(--cds-font-weight-medium)}
+.ip-sec{display:flex;flex-direction:column;gap:var(--cds-gap-lg)}
+.ip-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:var(--cds-gap-md)}
+.ip-two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:var(--cds-gap-md)}
+.ip-card{background:var(--color-panel);border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-lg);display:flex;flex-direction:column;gap:var(--cds-gap-xs);min-width:0}
+.ip-prog{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);text-transform:uppercase;letter-spacing:.04em}
+.ip-big{font-family:var(--font-anthropic-serif);font-weight:700;color:var(--color-fg);font-size:2.1rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.ip-sub{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.ip-sub b{color:var(--color-fg);font-weight:var(--cds-font-weight-medium);font-variant-numeric:tabular-nums}
+.ip-chart{position:relative;min-height:220px;width:100%}
+.ip-chart.ip-short{min-height:160px}
+.ip-legend{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.ip-sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.ip-tip{position:absolute;pointer-events:none;background:var(--cds-surface-popover);border:1px solid var(--cds-border);box-shadow:var(--cds-shadow-popover);border-radius:var(--cds-radius);padding:6px 8px;font-size:var(--cds-font-size-caption);max-width:260px;z-index:5;line-height:1.4}
+.ip-tip .k{color:var(--cds-text-secondary)}
+.ip-chart svg text{fill:var(--cds-text-secondary);font-size:11px;font-family:var(--font-anthropic-sans)}
+.ip-chart svg .ip-val{fill:var(--color-fg)}
+.ip-chart svg .ip-lab{fill:var(--color-fg);font-size:12px}
+.ip-chart svg .ip-seg{fill:var(--color-fg);font-size:11px;font-weight:600;paint-order:stroke;stroke:var(--color-panel);stroke-width:3px;stroke-linejoin:round}
+.ip-wrap{overflow-x:auto}
+.ip table{border-collapse:collapse;width:100%;font-size:var(--cds-font-size-caption)}
+.ip th{text-align:left;font-weight:var(--cds-font-weight-medium);color:var(--color-fg-muted);border-bottom:1px solid var(--color-border-line);padding:6px 8px;white-space:nowrap}
+.ip td{border-bottom:1px solid var(--color-border-line);padding:6px 8px;vertical-align:top}
+.ip td.n,.ip th.n{text-align:right;font-variant-numeric:tabular-nums}
+.ip-pill{display:inline-block;border-radius:999px;padding:1px 8px;font-size:var(--cds-font-size-caption);border:1px solid currentColor;white-space:nowrap}
+.ip-ok{color:var(--color-ok)}.ip-warn{color:var(--color-warn)}.ip-bad{color:var(--color-bad)}
+.ip-bar{height:10px;border-radius:999px;background:var(--color-border-line);overflow:hidden}
+.ip-bar>span{display:block;height:100%;background:var(--color-ok)}
+.ip-note{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.5;max-width:80ch}
+.ip details{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.ip details summary{cursor:pointer}
+[data-dash-source-state=refreshing]{opacity:.5}
+.ip-hero{border-top:4px solid var(--color-border-line)}
+.ip-xl{font-size:2.8rem}
+.ip-delta{font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);font-variant-numeric:tabular-nums}
+.ip-delta.ip-up{color:var(--color-ok)}.ip-delta.ip-down{color:var(--color-bad)}.ip-neutral{color:var(--color-fg-muted)}
+.ip-means{font-size:var(--cds-font-size-caption);color:var(--color-fg-muted);line-height:1.45;margin-top:auto;padding-top:var(--cds-gap-xs);border-top:1px dashed var(--color-border-line)}
+#impacto h2,#alcance-titulo{margin-bottom:var(--cds-gap-sm)}
+.ip-head{display:flex;flex-wrap:wrap;align-items:center;gap:var(--cds-gap-md)}
+.ip-exec-btn{margin-left:auto;font:inherit;font-size:var(--cds-font-size-body);background:none;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);padding:var(--cds-pad-xs) var(--cds-pad-sm);color:var(--color-fg-muted);cursor:pointer}
+.ip-exec-btn[aria-pressed=true]{color:var(--color-fg);background:var(--color-panel);font-weight:var(--cds-font-weight-medium)}
+.ip.ip-exec .ip-tabs,.ip.ip-exec #pulso,.ip.ip-exec #cards-programas,.ip.ip-exec #alcance-titulo,.ip.ip-exec #comparar,.ip.ip-exec #drill,.ip.ip-exec #filtros,.ip.ip-exec #funil .ip-muted,.ip.ip-exec #notas{display:none!important}
+.ip-form{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);align-items:flex-end;font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.ip-form label{display:flex;flex-direction:column;gap:4px}
+.ip-form input{font:inherit;font-size:var(--cds-font-size-body);padding:6px 8px;border:1px solid var(--color-border-line);border-radius:var(--cds-radius);background:var(--color-bg);color:var(--color-fg);width:9rem}
+.ip-auto{background:var(--color-bg);border-left:3px solid var(--color-border-line);padding:var(--cds-pad-sm) var(--cds-pad-md);border-radius:var(--cds-radius)}
+.ip-drill-head{display:flex;flex-wrap:wrap;gap:var(--cds-gap-md);align-items:center;justify-content:space-between;margin:var(--cds-gap-sm) 0 var(--cds-gap-xs)}
+.ip-link{background:none;border:none;padding:0;color:var(--color-fg-muted);text-decoration:underline;cursor:pointer;font:inherit;font-size:var(--cds-font-size-caption)}
+.ip-sim{border-top:1px solid var(--color-border-line);padding-top:var(--cds-gap-md);margin-top:var(--cds-gap-sm);display:flex;flex-direction:column;gap:var(--cds-gap-sm)}
+.ip-sim-out{display:flex;flex-direction:column;gap:4px;font-size:var(--cds-font-size-body)}
+.ip-checks{margin:0;padding-left:1.1rem;font-size:var(--cds-font-size-caption);line-height:1.6}
+.ip-group-title{font-size:var(--cds-font-size-title)!important;font-family:var(--font-anthropic-serif);font-weight:700!important;padding-top:var(--cds-gap-md);border-top:2px solid var(--color-border-line)}
+tr.ip-exemplo td{color:var(--color-fg-muted);font-style:italic}
+.ip-sc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--cds-gap-md)}
+.ip-sc{border-top:4px solid var(--color-border-line)}
+.ip-dim{font-size:var(--cds-font-size-caption);font-weight:var(--cds-font-weight-medium);text-transform:uppercase;letter-spacing:.04em;color:var(--color-fg)}
+.ip-dim i{font-style:normal;text-transform:none;letter-spacing:0;font-weight:400;color:var(--color-fg-muted);margin-left:6px}
+.ip-q{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-heading);color:var(--color-fg)}
+.ip-flow{display:flex;flex-wrap:wrap;align-items:center;gap:var(--cds-gap-sm);margin-top:var(--cds-gap-md);font-size:var(--cds-font-size-caption);color:var(--color-fg-muted)}
+.ip-flow span{border:1px solid var(--color-border-line);border-radius:999px;padding:2px 10px;color:var(--color-fg);background:var(--color-panel)}
+.ip-flow em{font-style:normal;margin-left:var(--cds-gap-sm)}
+.ip-dim-h{font-family:var(--font-anthropic-serif);font-size:var(--cds-font-size-title)!important;font-weight:700!important;padding-top:var(--cds-gap-md);border-top:2px solid var(--color-border-line);margin-top:var(--cds-gap-sm)!important}
+#squads-analise{order:1}#notas{order:2}
+tbody[data-draw=alertas] tr{cursor:pointer}
+tbody[data-draw=alertas] tr:hover td{background:var(--color-bg)}
+</style>
+
+<div class="ip">
+<header id="topo">
+  <div class="ip-head">
+    <h1>Indicadores da Inovação · 2026</h1>
+  </div>
+</header>
+
+<nav class="ip-tabs" role="tablist" aria-label="Programas">
+  <button class="ip-tab" role="tab" data-tab="ano" aria-selected="true">Visão do ano</button>
+  <button class="ip-tab" role="tab" data-tab="intra" aria-selected="false">Intraempreendedorismo</button>
+  <button class="ip-tab" role="tab" data-tab="aberta" aria-selected="false">Inovação Aberta</button>
+  <button class="ip-tab" role="tab" data-tab="projetos" aria-selected="false">Projetos e ações</button>
+  <button class="ip-tab" role="tab" data-tab="tempo" aria-selected="false">Indicadores estratégicos</button>
+  <button class="ip-tab" role="tab" data-tab="historico" aria-selected="false">Histórico</button>
+</nav>
+
+<!-- ============ VISÃO DO ANO ============ -->
+<section class="ip-sec" id="ano" data-sec="ano">
+  <p class="ip-muted" id="data-corte">Dados até 11/11/2026 · fonte: planilhas de acompanhamento da área de Inovação</p>
+
+  <!-- ===== Innovation Scorecard ===== -->
+  <div id="scorecard">
+    <h2>Innovation Scorecard</h2>
+    <div class="ip-sc-grid">
+      <div class="ip-card ip-sc" id="sc-resultados" data-c="0">
+        <span class="ip-dim">1 · Resultados <i>indicador de resultado</i></span>
+        <span class="ip-q">O que já virou valor para a cooperativa?</span>
+        <span class="ip-big ip-xl" data-draw="h-imp" data-source="impacto" data-field="implantadas" data-row="0">—</span>
+        <span class="ip-sub">soluções implantadas desde 2021 · <b data-draw="sc-captura" data-source="scorecard" data-field="captura_uso" data-row="0">—</b> com uso confirmado · em <b data-draw="h-est" data-source="impacto" data-field="estabelecimentos" data-row="0">—</b> unidades</span>
+        <span class="ip-delta" data-draw="h-imp-d" data-source="sq_resumo" data-field="taxa" data-row="0">—</span>
+        <span class="ip-sub">Tempo Devolvido: <b data-draw="sc-hv" data-source="scorecard" data-field="horas_validadas" data-row="0">—</b> de <b data-draw="c-td" data-source="tempo_devolvido" data-field="valor" data-where="indicador=meta_horas">—</b> h validadas · apuração em 2027</span>
+      </div>
+      <div class="ip-card ip-sc" id="sc-estrategia" data-c="1">
+        <span class="ip-dim">2 · Estratégia <i>indicador de direção</i></span>
+        <span class="ip-q">Estamos inovando nas áreas e temas certos?</span>
+        <span class="ip-big ip-xl" data-draw="sc-conc" data-source="scorecard" data-field="concentracao" data-row="0">—</span>
+        <span class="ip-sub">das soluções estão na <b data-draw="sc-top" data-source="scorecard" data-field="unidade_top" data-row="0">—</b> · <b data-draw="sc-unid" data-source="scorecard" data-field="unidades_impl" data-row="0">—</b> unidades com solução implantada</span>
+        <span class="ip-sub">Meta 2027: <b data-draw="c-aa" data-source="areas_ativas" data-field="meta_pct" data-where="trimestre=4%C2%BA%20tri">—</b> das 19 áreas com iniciativa ativa</span>
+        <span class="ip-sub" data-draw="sc-class" data-source="scorecard" data-field="classificados" data-row="0">—</span>
+      </div>
+      <div class="ip-card ip-sc" id="sc-processo" data-c="2">
+        <span class="ip-dim">3 · Processo <i>indicador antecedente</i></span>
+        <span class="ip-q">O funil converte e encerra na hora certa?</span>
+        <span class="ip-big ip-xl" data-draw="sc-scale" data-source="scorecard" data-field="scale_rate" data-row="0">—</span>
+        <span class="ip-sub">dos <b data-draw="sc-enc" data-source="scorecard" data-field="encerrados" data-row="0">—</b> desafios dos ciclos encerrados (2021–2025) viraram solução implantada</span>
+        <span class="ip-sub">Encerradas por decisão: <b data-draw="sc-kill" data-source="scorecard" data-field="kill_rate" data-row="0">—</b> · paradas sem início: <b data-draw="sc-parados" data-source="scorecard" data-field="parados_pct" data-row="0">—</b> (<b data-draw="sc-parados-n" data-source="scorecard" data-field="paradas" data-row="0">—</b> soluções)</span>
+      </div>
+      <div class="ip-card ip-sc" id="sc-contexto" data-c="3">
+        <span class="ip-dim">4 · Contexto <i>indicador antecedente</i></span>
+        <span class="ip-q">Temos pessoas, cultura e parcerias para inovar?</span>
+        <span class="ip-big ip-xl" data-draw="h-pes" data-source="squads_pessoas" data-field="valor" data-where="indicador=pessoas_unicas">—</span>
+        <span class="ip-sub">colaboradores já participaram de squads · <b data-draw="h-alu" data-source="impulsiona_semestres" data-field="total" data-where="semestre=2%C2%BAS%2F2026">—</b> alunos por semestre no Impulsiona</span>
+        <span class="ip-delta" data-draw="h-alu-d" data-source="impacto" data-field="cresc_impulsiona" data-row="0">—</span>
+        <span class="ip-sub"><b data-draw="c-st" data-source="st_resumo" data-field="startups" data-row="0">—</b> empresas no Radar de Inovação · <b data-draw="c-ic" data-source="ic_resumo" data-field="visualizacoes" data-row="0">—</b> visualizações do Inova Cast · engajamento das lideranças: ainda não medido</span>
+      </div>
+    </div>
+    <div class="ip-flow" aria-label="Relação entre as dimensões">
+      <span>Contexto</span><b>→</b><span>Processo</span><b>→</b><span>Resultados</span><em>Estratégia orienta as três</em>
+    </div>
+  </div>
+
+  <!-- ===== Resultados ===== -->
+  <h2 class="ip-dim-h" id="dim-resultados">1 · Resultados</h2>
+  <div class="ip-card" id="sc-potencial">
+    <h3>Potencial × capturado</h3>
+    <p class="ip-muted">Potencial é o que está proposto ou aguardando comprovação. Capturado é o que já está implantado e em uso.</p>
+    <div class="ip-chart ip-short" data-draw="sc-pot" data-source="sc_potencial" role="img" aria-label="Soluções em potencial e capturadas"></div>
+  </div>
+
+  <!-- ===== Estratégia ===== -->
+  <h2 class="ip-dim-h" id="dim-estrategia">2 · Estratégia</h2>
+  <div class="ip-two">
+    <div class="ip-card" id="sc-unidades">
+      <h3>Soluções por unidade</h3>
+      <div class="ip-legend">
+        <span><i class="ip-sw" data-c="2"></i>Soluções</span>
+        <span><i class="ip-sw" data-c="0"></i>Implantadas</span>
+      </div>
+      <div class="ip-chart ip-short" data-draw="sc-unid-chart" data-source="sc_unidades" role="img" aria-label="Soluções de Squads por unidade"></div>
+    </div>
+    <div class="ip-card" id="sc-horizontes">
+      <h3>Equilíbrio do portfólio (H1 / H2 / H3)</h3>
+      <div class="ip-chart ip-short" data-draw="sc-tipos" data-source="sc_tipos" role="img" aria-label="Projetos por tipo de inovação"></div>
+    </div>
+  </div>
+
+  <!-- ===== Processo ===== -->
+  <h2 class="ip-dim-h" id="dim-processo">3 · Processo</h2>
+
+  <!-- ===== Funil ===== -->
+  <div class="ip-card" id="funil">
+    <h2>Funil da inovação: de pessoas engajadas a soluções em uso</h2>
+    <p class="ip-muted">Todos os ciclos de Squads (2021 a 2026). O percentual mostra quanto da etapa anterior avança.</p>
+    <div class="ip-chart ip-short" data-draw="funil-ano" data-source="funil_recorte" role="img" aria-label="Funil dos Squads, de participações a soluções em uso"></div>
+  </div>
+
+  <!-- ===== Evolução ===== -->
+  <div class="ip-card" id="sc-saude-card">
+    <h3>Saúde do funil nos ciclos encerrados (2021–2025)</h3>
+    <div class="ip-chart ip-short" data-draw="sc-saude" data-source="sc_saude" role="img" aria-label="Desfecho das soluções dos ciclos encerrados"></div>
+  </div>
+
+  <!-- ===== Contexto ===== -->
+  <h2 class="ip-dim-h" id="dim-contexto">4 · Contexto</h2>
+  <div class="ip-two" id="evolucao">
+    <div class="ip-card" id="evo-squads">
+      <h3>Squads: participações e desafios por ciclo</h3>
+      <div class="ip-legend">
+        <span><i class="ip-sw" data-c="0"></i>Participações</span>
+        <span><i class="ip-sw" data-c="1"></i>Desafios</span>
+      </div>
+      <div class="ip-chart ip-short" data-draw="evo-sq" data-source="squads_ciclos" role="img" aria-label="Participações e desafios dos Squads por ano"></div>
+    </div>
+    <div class="ip-card" id="evo-impulsiona">
+      <h3>Impulsiona: participações de alunos por semestre</h3>
+      <div class="ip-legend">
+        <span><i class="ip-sw" data-c="0"></i>MEI-U</span>
+        <span><i class="ip-sw" data-c="1"></i>Disciplina de Extensão</span>
+      </div>
+      <div class="ip-chart ip-short" data-draw="evo-im" data-source="impulsiona_semestres" role="img" aria-label="Participações de alunos do Impulsiona por semestre"></div>
+    </div>
+  </div>
+
+  <div class="ip-card" id="atencao">
+    <h2>Pontos de atenção</h2>
+    <p class="ip-muted">Sinais de saúde de cada programa comparados à referência da própria planilha. Clique numa linha para abrir a análise.</p>
+    <div class="ip-wrap">
+      <table data-source="alertas" data-row-key="sinal">
+        <thead><tr><th data-field="programa">Programa</th><th data-field="sinal">Sinal</th><th class="n" data-field="valor_txt">Atual</th><th class="n" data-field="referencia_txt">Referência</th><th data-field="situacao">Situação</th></tr></thead>
+        <tbody data-draw="alertas"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SQUADS: ANÁLISE POR CICLO E UNIDADE (aparece logo após a seção Squads, via CSS order) ============ -->
+<section class="ip-sec" id="squads-analise" data-sec="intra" hidden="">
+  <div class="ip-card" id="comparar">
+    <h2>Comparar ciclos de Squads</h2>
+    <div class="ip-form">
+      <label>Ciclo
+        <select class="dash-select" id="cmp-a" aria-label="Ciclo"><option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select>
+      </label>
+      <label>comparado com
+        <select class="dash-select" id="cmp-b" aria-label="Comparado com"><option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option></select>
+      </label>
+    </div>
+    <div class="ip-wrap"><table data-source="sq_var" data-row-key="par,metrica">
+      <thead><tr><th data-field="metrica">Indicador</th><th class="n" data-field="valor_a"><span data-draw="cmp-ha">—</span></th><th class="n" data-field="valor_b"><span data-draw="cmp-hb">—</span></th><th class="n" data-field="variacao">Variação</th></tr></thead>
+      <tbody data-draw="cmp"></tbody>
+    </table></div>
+  </div>
+
+</section>
+
+<!-- ============ INOVA CAST ============ -->
+<section class="ip-sec" id="intra-intro" data-sec="intra" hidden="">
+  <p class="ip-lede">Intraempreendedorismo reúne os programas que desenvolvem a capacidade de inovar dentro da cooperativa: o <b>Inova Cast</b> inspira e dissemina a cultura, e os <b>Squads</b> transformam desafios das áreas em soluções.</p>
+</section>
+<section class="ip-sec" id="inovacast" data-sec="intra" hidden="">
+  <h2 class="ip-group-title">Inova Cast</h2>
+  <div class="ip-grid">
+    <div class="ip-card"><span class="ip-prog">Edições realizadas</span><span class="ip-big" data-draw="ic-ep" data-source="ic_resumo" data-field="episodios" data-row="0">—</span><span class="ip-sub">das quais <b data-draw="ic-esp" data-source="ic_resumo" data-field="especiais" data-row="0">—</b> especiais de Squads</span></div>
+    <div class="ip-card"><span class="ip-prog">Visualizações</span><span class="ip-big" data-draw="ic-v" data-source="ic_resumo" data-field="visualizacoes" data-row="0">—</span><span class="ip-sub">média de <b data-draw="ic-m" data-source="ic_resumo" data-field="media_views" data-row="0">—</b> por edição</span></div>
+    <div class="ip-card"><span class="ip-prog">Interações</span><span class="ip-big" data-draw="ic-i" data-source="ic_resumo" data-field="interacoes" data-row="0">—</span><span class="ip-sub">curtidas + mensagens no chat</span></div>
+    <div class="ip-card"><span class="ip-prog">Novos assinantes</span><span class="ip-big" data-draw="ic-a" data-source="ic_resumo" data-field="novos_assinantes" data-row="0">—</span><span class="ip-sub"><b data-draw="ic-c" data-source="ic_resumo" data-field="nao_realizados" data-row="0">—</b> datas sem edição (feriado, cancelamento ou evento)</span></div>
+  </div>
+  <div class="ip-card" id="ic-evolucao">
+    <h2>Visualizações por edição</h2>
+    <div class="ip-legend">
+      <span><i class="ip-sw" data-c="0"></i>Convidado interno</span>
+      <span><i class="ip-sw" data-c="1"></i>Convidado externo</span>
+      <span><i class="ip-sw" data-c="2"></i>Especial Squads</span>
+    </div>
+    <div class="ip-chart" data-draw="ic-chart" data-source="inovacast" role="img" aria-label="Visualizações de cada edição do Inova Cast em 2026"></div>
+  </div>
+  <div class="ip-two">
+    <div class="ip-card" id="ic-classificacao">
+      <h3>Média de visualizações por tipo de convidado</h3>
+      <div class="ip-chart ip-short" data-draw="ic-class" data-source="ic_class" role="img" aria-label="Média de visualizações por tipo de convidado"></div>
+    </div>
+    <div class="ip-card" id="ic-top">
+      <h3>As 5 edições mais vistas</h3>
+      <div class="ip-wrap"><table data-source="inovacast" data-row-key="data">
+        <thead><tr><th data-field="data">Data</th><th data-field="tema">Tema</th><th class="n" data-field="visualizacoes">Views</th></tr></thead>
+        <tbody data-draw="ic-top"></tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SQUADS ============ -->
+<section class="ip-sec" id="squads" data-sec="intra" hidden="">
+  <h2 class="ip-group-title">Squads</h2>
+  <div class="ip-grid">
+    <div class="ip-card"><span class="ip-prog">Desafios desde 2021</span><span class="ip-big" data-draw="sq-d" data-source="sq_resumo" data-field="desafios" data-row="0">—</span><span class="ip-sub">em <b data-draw="sq-c" data-source="sq_resumo" data-field="ciclos" data-row="0">—</b> ciclos</span></div>
+    <div class="ip-card"><span class="ip-prog">Soluções implantadas</span><span class="ip-big" data-draw="sq-i" data-source="sq_resumo" data-field="implantadas" data-row="0">—</span><span class="ip-sub">taxa de <b data-draw="sq-t" data-source="sq_resumo" data-field="taxa" data-row="0">—</b> · meta <b data-draw="sq-meta" data-source="squads_ciclos" data-field="meta_implantacao" data-where="ano=2026">—</b></span></div>
+    <div class="ip-card"><span class="ip-prog">Participações</span><span class="ip-big" data-draw="sq-p" data-source="sq_resumo" data-field="participacoes" data-row="0">—</span><span class="ip-sub"><b data-draw="sq-co" data-source="sq_resumo" data-field="concluiram" data-row="0">—</b> concluíram o ciclo</span></div>
+    <div class="ip-card"><span class="ip-prog">Capacitação 2026</span><span class="ip-big" data-draw="sq-h" data-source="sq_resumo" data-field="horas_capacitacao" data-row="0">—</span><span class="ip-sub">horas em <b data-draw="sq-hr" data-source="sq_resumo" data-field="encontros" data-row="0">—</b> workshops, checkpoints e capacitações</span></div>
+  </div>
+  <div class="ip-card" id="sq-ciclos">
+    <h2>Desafios e soluções implantadas por ciclo</h2>
+    <p class="ip-muted">Meta de cada ciclo é 30%.</p>
+    <div class="ip-legend">
+      <span><i class="ip-sw" data-c="0"></i>Desafios</span>
+      <span><i class="ip-sw" data-c="1"></i>Implantadas</span>
+    </div>
+    <div class="ip-chart" data-draw="sq-chart" data-source="squads_ciclos" role="img" aria-label="Desafios e soluções implantadas por ciclo de Squads"></div>
+  </div>
+  <div class="ip-two">
+    <div class="ip-card" id="sq-status">
+      <h3>Onde estão as 24 soluções</h3>
+      <div class="ip-chart ip-short" data-draw="sq-status" data-source="sq_status" role="img" aria-label="Soluções de Squads por status"></div>
+    </div>
+    <div class="ip-card" id="sq-part">
+      <h3>Participações por ciclo</h3>
+      <div class="ip-chart ip-short" data-draw="sq-part" data-source="squads_ciclos" role="img" aria-label="Participações de colaboradores por ciclo"></div>
+    </div>
+  </div>
+  <div class="ip-card" id="sq-reports">
+    <h2>Ciclo 2026: pontuação dos reports de sprint</h2>
+    <div class="ip-wrap"><table data-source="squads_reports" data-row-key="squad">
+      <thead><tr><th data-field="squad">Squad</th><th class="n" data-field="sprint_30">Sprint 30</th><th class="n" data-field="sprint_60">Sprint 60</th><th class="n" data-field="sprint_90">Sprint 90</th><th class="n" data-field="nota_final">Nota final</th></tr></thead>
+      <tbody data-draw="sq-reports"></tbody>
+    </table></div>
+  </div>
+  <div class="ip-card" id="sq-solucoes">
+    <h2>Soluções por ciclo</h2>
+    <div class="ip-wrap"><table data-source="squads_solucoes" data-row-key="squad">
+      <thead><tr><th data-field="ano">Ano</th><th data-field="squad">Squad</th><th data-field="solucao">Solução</th><th data-field="estabelecimento">Onde</th><th data-field="status">Status</th></tr></thead>
+      <tbody data-draw="sq-sol"></tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ IMPULSIONA ============ -->
+<section class="ip-sec" id="aberta-intro" data-sec="aberta" hidden="">
+  <p class="ip-lede">Inovação Aberta reúne os programas que conectam a cooperativa ao ecossistema: a universidade, pelo <b>Impulsiona</b>, e o mercado de startups e fornecedores, pelo <b>Radar de Inovação</b>.</p>
+</section>
+<section class="ip-sec" id="impulsiona" data-sec="aberta" hidden="">
+  <h2 class="ip-group-title">Impulsiona</h2>
+  <div class="ip-grid">
+    <div class="ip-card"><span class="ip-prog">Alunos únicos</span><span class="ip-big" data-draw="im-a" data-source="impulsiona_indicadores" data-field="total" data-where="indicador=Alunos%20%C3%BAnicos">—</span><span class="ip-sub"><b data-draw="im-pt" data-source="impulsiona_indicadores" data-field="total" data-where="indicador=Participa%C3%A7%C3%B5es%20(aluno%20%C3%97%20grupo)">—</b> participações</span></div>
+    <div class="ip-card"><span class="ip-prog">Presença média MEI-U</span><span class="ip-big" data-draw="im-pm" data-source="impulsiona_indicadores" data-field="mei_u" data-where="indicador=Presen%C3%A7a%20m%C3%A9dia">—</span><span class="ip-sub">meta de presença <b data-draw="im-meta">—</b></span></div>
+    <div class="ip-card"><span class="ip-prog">Presença média Extensão</span><span class="ip-big" data-draw="im-pe" data-source="impulsiona_indicadores" data-field="extensao" data-where="indicador=Presen%C3%A7a%20m%C3%A9dia">—</span><span class="ip-sub">Disciplina de Extensão (Ciência de Dados)</span></div>
+    <div class="ip-card"><span class="ip-prog">Evasão MEI-U</span><span class="ip-big" data-draw="im-ev" data-source="impulsiona_indicadores" data-field="mei_u" data-where="indicador=Taxa%20de%20evas%C3%A3o">—</span><span class="ip-sub"><b data-draw="im-in" data-source="impulsiona_indicadores" data-field="mei_u" data-where="indicador=Participa%C3%A7%C3%B5es%20inativas%20(sa%C3%ADram)">—</b> alunos saíram dos projetos</span></div>
+  </div>
+  <div class="ip-card" id="im-presenca">
+    <h2>Presença por grupo com reuniões registradas</h2>
+    <p class="ip-muted">A linha tracejada marca a meta de presença.</p>
+    <div class="ip-chart ip-short" data-draw="im-chart" data-source="impulsiona_grupos" role="img" aria-label="Presença média por grupo do Impulsiona"></div>
+  </div>
+  <div class="ip-two">
+    <div class="ip-card" id="im-indicadores">
+      <h3>MEI-U × Disciplina de Extensão</h3>
+      <div class="ip-wrap"><table data-source="impulsiona_indicadores" data-row-key="indicador">
+        <thead><tr><th data-field="indicador">Indicador</th><th class="n" data-field="mei_u">MEI-U</th><th class="n" data-field="extensao">Extensão</th><th class="n" data-field="total">Total</th></tr></thead>
+        <tbody data-draw="im-ind"></tbody>
+      </table></div>
+    </div>
+    <div class="ip-card" id="im-grupos">
+      <h3>Grupos e acompanhamento</h3>
+      <div class="ip-wrap"><table data-source="impulsiona_grupos" data-row-key="codigo">
+        <thead><tr><th data-field="codigo">Cód.</th><th data-field="projeto">Projeto / turma</th><th data-field="semestre">Semestre</th><th class="n" data-field="reunioes_realizadas">Reuniões</th><th data-field="acompanhamento">Alerta</th></tr></thead>
+        <tbody data-draw="im-grp"></tbody>
+      </table></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ STARTUPS ============ -->
+<section class="ip-sec" id="startups" data-sec="aberta" hidden="">
+  <h2 class="ip-group-title">Radar de Inovação</h2>
+  <p class="ip-lede">Pesquisas de mercado que apoiam decisões das áreas e o portfólio único de startups e empresas que alimenta essas pesquisas.</p>
+
+  <h3>Pesquisas de mercado</h3>
+  <div class="ip-grid">
+    <div class="ip-card"><span class="ip-prog">Pesquisas cadastradas</span><span class="ip-big" data-draw="rd-pq" data-source="radar_resumo" data-field="pesquisas" data-row="0">—</span><span class="ip-sub"><b data-draw="rd-ex" data-source="radar_resumo" data-field="em_execucao" data-row="0">—</b> em execução · <b data-draw="rd-co" data-source="radar_resumo" data-field="concluidas" data-row="0">—</b> concluídas</span></div>
+    <div class="ip-card"><span class="ip-prog">Tempo médio das concluídas</span><span class="ip-big" data-draw="rd-tm" data-source="radar_resumo" data-field="tempo_medio" data-row="0">—</span><span class="ip-sub">dias, do início à conclusão</span></div>
+    <div class="ip-card"><span class="ip-prog">Concluídas no prazo</span><span class="ip-big" data-draw="rd-np" data-source="radar_resumo" data-field="no_prazo" data-row="0">—</span><span class="ip-sub"><b data-draw="rd-at" data-source="radar_resumo" data-field="atrasadas" data-row="0">—</b> aberta em atraso · <b data-draw="rd-sp" data-source="radar_resumo" data-field="sem_prazo" data-row="0">—</b> sem prazo definido</span></div>
+  </div>
+  <div class="ip-two">
+    <div class="ip-card" id="rd-gargalos">
+      <h3>Gargalos por status</h3>
+      <div class="ip-chart ip-short" data-draw="rd-status" data-source="radar_status" role="img" aria-label="Pesquisas de mercado por status"></div>
+    </div>
+    <div class="ip-card" id="rd-prazos">
+      <h3>Situação do prazo</h3>
+      <div class="ip-chart ip-short" data-draw="rd-prazo" data-source="radar_prazo" role="img" aria-label="Pesquisas por situação do prazo"></div>
+    </div>
+  </div>
+  <div class="ip-card" id="rd-demandas">
+    <h3>Quem demanda e que impacto se espera</h3>
+    <div class="ip-legend">
+      <span><i class="ip-sw" data-c="0"></i>Estabelecimento demandante</span>
+      <span><i class="ip-sw" data-c="1"></i>Impacto esperado</span>
+    </div>
+    <div class="ip-chart ip-short" data-draw="rd-estab" data-source="radar_estab" role="img" aria-label="Pesquisas por estabelecimento e por impacto esperado"></div>
+  </div>
+  <div class="ip-card" id="rd-pesquisas">
+    <h3>Pesquisas</h3>
+    <div class="ip-wrap"><table data-source="radar_pesquisas" data-row-key="id">
+      <thead><tr><th data-field="id">ID</th><th data-field="titulo">Pesquisa</th><th data-field="estabelecimento">Estabelecimento</th><th data-field="impacto">Impacto</th><th data-field="status">Status</th><th class="n" data-field="dias_execucao">Dias</th><th data-field="situacao_prazo">Prazo</th><th class="n" data-field="n_empresas">Empresas</th><th data-field="empresa_escolhida">Escolhida / recomendada</th></tr></thead>
+      <tbody data-draw="rd-pesq"></tbody>
+    </table></div>
+  </div>
+
+  <h3>Portfólio de empresas</h3>
+  <div class="ip-grid">
+    <div class="ip-card"><span class="ip-prog">Empresas no portfólio</span><span class="ip-big" data-draw="rd-em" data-source="radar_resumo" data-field="empresas" data-row="0">—</span><span class="ip-sub"><b data-draw="rd-mt" data-source="radar_resumo" data-field="mapeamento_total" data-row="0">—</b> do mapeamento de startups · <b data-draw="rd-vp" data-source="radar_resumo" data-field="via_pesquisa" data-row="0">—</b> vindas das pesquisas</span></div>
+    <div class="ip-card"><span class="ip-prog">Vinculadas a pesquisas</span><span class="ip-big" data-draw="rd-vi" data-source="radar_resumo" data-field="vinculadas" data-row="0">—</span><span class="ip-sub"><b data-draw="rd-so" data-source="radar_resumo" data-field="somente_mapeadas" data-row="0">—</b> ainda só mapeadas</span></div>
+    <div class="ip-card"><span class="ip-prog">Aproveitamento do mapeamento</span><span class="ip-big" data-draw="rd-ma" data-source="radar_resumo" data-field="aproveitamento_mapeamento" data-row="0">—</span><span class="ip-sub"><b data-draw="rd-mu" data-source="radar_resumo" data-field="mapeamento_usadas" data-row="0">—</b> startups mapeadas já usadas em pesquisas</span></div>
+    <div class="ip-card"><span class="ip-prog">Selecionadas ou recomendadas</span><span class="ip-big" data-draw="rd-se" data-source="radar_resumo" data-field="selecionadas" data-row="0">—</span><span class="ip-sub">empresas escolhidas em pesquisas</span></div>
+  </div>
+  <div class="ip-card" id="rd-funil-card">
+    <h3>Funil do portfólio: do mapeamento à empresa escolhida</h3>
+    <div class="ip-chart ip-short" data-draw="rd-funil" data-source="radar_funil" role="img" aria-label="Funil do portfólio de empresas do Radar"></div>
+  </div>
+  <div class="ip-two">
+    <div class="ip-card" id="st-temas">
+      <h3>Empresas por categoria</h3>
+      <div class="ip-chart ip-short" data-draw="st-chart" data-source="st_temas" role="img" aria-label="Empresas do portfólio por categoria"></div>
+    </div>
+    <div class="ip-card" id="rd-categorias">
+      <h3>Categorias: pesquisas × portfólio</h3>
+      <p class="ip-muted">Em vermelho, categorias com 3 ou mais empresas e nenhuma usada em pesquisa.</p>
+      <div class="ip-wrap"><table data-source="radar_categorias" data-row-key="categoria">
+        <thead><tr><th data-field="categoria">Categoria</th><th class="n" data-field="pesquisas">Pesquisas</th><th class="n" data-field="empresas">Empresas</th><th class="n" data-field="vinculadas">Vinculadas</th><th class="n" data-field="aproveitamento">Aproveitamento</th></tr></thead>
+        <tbody data-draw="rd-cat"></tbody>
+      </table></div>
+    </div>
+  </div>
+  <div class="ip-card" id="st-lista">
+    <h3>Base de empresas</h3>
+    <div class="ip-wrap"><table data-source="startups" data-row-key="id">
+      <thead><tr><th data-field="id">ID</th><th data-field="startup">Empresa</th><th data-field="solucao">Solução</th><th data-field="tema">Categoria</th></tr></thead>
+      <tbody data-draw="st-tab"></tbody>
+    </table></div>
+  </div>
+</section>
+
+<!-- ============ PROJETOS E AÇÕES ============ -->
+<section class="ip-sec" id="projetos" data-sec="projetos" hidden="">
+  <p class="ip-muted">Nível projeto · líderes de iniciativa e times · atualização mensal</p>
+  <p class="ip-lede">Registro único dos projetos e ações de inovação com resultado para as áreas. Daqui saem as horas do <b>Tempo Devolvido</b> e as áreas do indicador de <b>Áreas com Iniciativas Ativas</b>, na aba Indicadores estratégicos.</p>
+  <div class="ip-grid">
+    <div class="ip-card"><span class="ip-prog">Projetos e ações registrados</span><span class="ip-big" data-draw="pj-reg" data-source="proj_resumo" data-field="registrados" data-row="0">—</span><span class="ip-sub"><b data-draw="pj-val" data-source="proj_resumo" data-field="validados" data-row="0">—</b> validados pela equipe de inovação</span></div>
+    <div class="ip-card"><span class="ip-prog">Em andamento</span><span class="ip-big" data-draw="pj-and" data-source="proj_resumo" data-field="em_andamento" data-row="0">—</span><span class="ip-sub">ainda não encerrados</span></div>
+    <div class="ip-card"><span class="ip-prog">Áreas alcançadas</span><span class="ip-big" data-draw="pj-are" data-source="proj_resumo" data-field="areas" data-row="0">—</span><span class="ip-sub">áreas distintas com projeto ou ação registrada</span></div>
+    <div class="ip-card"><span class="ip-prog">Horas devolvidas que contam</span><span class="ip-big" data-draw="pj-h" data-source="td_resumo" data-field="horas_validadas" data-row="0">—</span><span class="ip-sub"><b data-draw="pj-hp" data-source="td_resumo" data-field="horas_pendentes" data-row="0">—</b> h aguardando validação ou evidência</span></div>
+  </div>
+  <div class="ip-card" id="pj-jornada">
+    <h2>Projetos e ações por etapa da jornada</h2>
+    <div class="ip-chart ip-short" data-draw="pj-etapas" data-source="proj_etapas" role="img" aria-label="Projetos e ações por etapa da jornada da inovação"></div>
+  </div>
+  <div class="ip-card" id="pj-registro">
+    <h2>Registro de projetos e ações</h2>
+    <p class="ip-muted">A linha P-000 é um exemplo de preenchimento e não entra nos indicadores.</p>
+    <div class="ip-wrap"><table data-source="projetos" data-row-key="id">
+      <thead><tr><th data-field="id">ID</th><th data-field="nome">Projeto / ação</th><th data-field="tipo">Tipo</th><th data-field="origem">Origem</th><th data-field="areas">Área(s)</th><th data-field="etapa">Etapa</th><th data-field="data_ultima_etapa">Última mudança</th><th class="n" data-source="proj_horas" data-field="horas">Horas devolvidas</th><th data-source="proj_horas" data-field="conta_tempo">Tempo Devolvido</th><th data-field="resultado">Resultado</th></tr></thead>
+      <tbody data-draw="pj-tab"></tbody>
+    </table></div>
+  </div>
+  <div class="ip-card" id="pj-como">
+    <h2>Como registrar e como cada registro alimenta os indicadores</h2>
+    <ol class="ip-note">
+      <li><b>Registrar:</b> uma linha por projeto ou ação na planilha de registro; a equipe de inovação atualiza o painel.</li>
+      <li><b>Tempo Devolvido:</b> conta (tempo antes − tempo depois) × volume acumulado ÷ 60, só quando <i>validado</i> = Sim e há evidência (relatório do sistema ou cronometragem; estimativa fica pendente). Melhorias incrementais de outras áreas também contam.</li>
+      <li><b>Áreas com Iniciativas Ativas:</b> conta cada área da coluna <i>áreas</i> (separe com ";" quando for compartilhada) se o registro tiver gestor, estiver priorizado e validado, e tiver mudança de etapa nos 90 dias antes do fim do trimestre. "Encerrada com aprendizado" conta no trimestre da decisão. A origem "Área (melhoria própria)" não entra nesse indicador.</li>
+    </ol>
+    <details id="pj-campos">
+      <summary>Campos do registro</summary>
+      <div class="ip-wrap"><table>
+        <tbody>
+          <tr><th>id</th><td>Código único, ex.: P-001</td></tr>
+          <tr><th>nome</th><td>Nome do projeto ou ação</td></tr>
+          <tr><th>tipo</th><td>Projeto, Ação ou Melhoria incremental</td></tr>
+          <tr><th>origem</th><td>Equipe de inovação, Squad, Impulsiona, Startup/parceiro ou Área (melhoria própria)</td></tr>
+          <tr><th>areas</th><td>Área(s) da cooperativa, conforme as 19 áreas do organograma de jan/2027; separe com ";"</td></tr>
+          <tr><th>gestor</th><td>Gestor(a) responsável pela iniciativa</td></tr>
+          <tr><th>etapa</th><td>Captação, Triagem, Descoberta e validação, Experimentação, Piloto, Escala, Encerrada com aprendizado ou Encerrada</td></tr>
+          <tr><th>priorizada</th><td>Sim ou Não</td></tr>
+          <tr><th>data_ultima_etapa</th><td>Data da última mudança de etapa ou decisão formal (AAAA-MM-DD)</td></tr>
+          <tr><th>tipo_inovacao</th><td>Incremental, Radical ou Disruptiva</td></tr>
+          <tr><th>beneficiario</th><td>Cliente, Colaborador ou Cooperado</td></tr>
+          <tr><th>tempo_antes_min / tempo_depois_min</th><td>Minutos por atividade antes e depois da solução</td></tr>
+          <tr><th>volume_acumulado</th><td>Quantas vezes a atividade aconteceu em 2027 desde a implantação</td></tr>
+          <tr><th>evidencia</th><td>Relatório do sistema, Cronometragem (30 medições) ou Estimativa (pendente)</td></tr>
+          <tr><th>validado</th><td>Sim ou Não. Só a equipe de inovação marca.</td></tr>
+          <tr><th>indicador_resultado / resultado</th><td>O principal indicador de resultado para a área e o valor alcançado, ex.: "Glosas" / "−18% no trimestre"</td></tr>
+        </tbody>
+      </table></div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ TEMPO DEVOLVIDO ============ -->
+<section class="ip-sec" id="tempo" data-sec="tempo" hidden="">
+  <p class="ip-lede">Em 2027 a inovação passa a ser acompanhada por dois indicadores: o Tempo Devolvido mede o <b>resultado</b> (horas economizadas) e Áreas com Iniciativas Ativas mede o <b>processo</b> (quanto a inovação está espalhada pela cooperativa e em movimento).</p>
+  <div class="ip-two">
+    <!-- ===== Tempo Devolvido ===== -->
+    <div class="ip-card" id="td-card">
+      <span class="ip-prog">Indicador de resultado · Estratégico</span>
+      <h2>Tempo Devolvido por Inovação</h2>
+      <div class="ip-grid">
+        <div><span class="ip-sub">Meta até dez/2027</span><br><span class="ip-big" data-draw="td-m" data-source="tempo_devolvido" data-field="valor" data-where="indicador=meta_horas">—</span><span class="ip-sub"> h</span></div>
+        <div><span class="ip-sub">Horas validadas</span><br><span class="ip-big" data-draw="td-h" data-source="td_resumo" data-field="horas_validadas" data-row="0">—</span><span class="ip-sub"> h</span></div>
+      </div>
+      <div class="ip-bar" role="img" aria-label="Percentual da meta de horas atingido"><span data-draw="td-bar" data-source="td_resumo" data-field="percentual" data-row="0"></span></div>
+      <p class="ip-sub"><b data-draw="td-p" data-source="td_resumo" data-field="percentual" data-row="0">—</b> da meta · ritmo necessário de <b data-draw="td-r" data-source="td_resumo" data-field="horas_por_mes" data-row="0">—</b> h por mês · <b data-draw="td-c" data-source="td_resumo" data-field="cadastradas" data-row="0">—</b> projetos e ações registrados</p>
+      <h3>Como é calculado</h3>
+      <p class="ip-note">(tempo antes − tempo depois, em minutos) × volume do mês ÷ 60 = horas devolvidas. Só contam inovações confirmadas e validadas pelo núcleo, com evidência (relatório do sistema ou 30 cronometragens).</p>
+      <p class="ip-note"><b>Atenção na planilha de coleta:</b> a coluna "Horas que contam no indicador" e a aba Resumo mostram erro de referência (#REF!). Corrija a fórmula antes de janeiro, senão o indicador não fecha.</p>
+      <div class="ip-sim" id="sim-td-box">
+        <h3>Simulador: o que é preciso para bater a meta?</h3>
+        <div class="ip-form">
+          <label>Soluções implantadas em 2027<input type="number" id="sim-n" min="0" max="500" step="1" value="10"></label>
+          <label>Horas devolvidas por solução, por mês<input type="number" id="sim-h" min="0" max="10000" step="1" value="40"></label>
+          <label>Mês médio de implantação
+            <select class="dash-select" id="sim-m" aria-label="Mês médio de implantação">
+              <option value="1">janeiro</option><option value="2">fevereiro</option><option value="3" selected="">março</option><option value="4">abril</option>
+              <option value="5">maio</option><option value="6">junho</option><option value="7">julho</option><option value="8">agosto</option>
+              <option value="9">setembro</option><option value="10">outubro</option><option value="11">novembro</option><option value="12">dezembro</option>
+            </select>
+          </label>
+        </div>
+        <div class="ip-sim-out" data-draw="sim-td" data-source="tempo_devolvido"></div>
+        <p class="ip-muted">Simulação: cada solução devolve as mesmas horas todo mês, a partir do mês de implantação até dezembro.</p>
+      </div>
+    </div>
+
+    <!-- ===== Áreas com Iniciativas Ativas ===== -->
+    <div class="ip-card" id="aa-card">
+      <span class="ip-prog">Indicador de processo · Tático</span>
+      <h2>Áreas com Iniciativas de Inovação Ativas</h2>
+      <div class="ip-grid">
+        <div><span class="ip-sub">Meta até dez/2027</span><br><span class="ip-big" data-draw="aa-meta" data-source="areas_ativas" data-field="meta_pct" data-where="trimestre=4%C2%BA%20tri">—</span><span class="ip-sub"> · <b data-draw="aa-meta-n" data-source="areas_ativas" data-field="meta_areas" data-where="trimestre=4%C2%BA%20tri">—</b> de <b data-draw="aa-tot" data-source="areas_ativas" data-field="total_areas" data-where="trimestre=4%C2%BA%20tri">—</b> áreas</span></div>
+        <div><span class="ip-sub">Último trimestre apurado</span><br><span class="ip-big" data-draw="aa-atual" data-source="aa_resumo" data-field="pct_atual" data-row="0">—</span><span class="ip-sub" data-draw="aa-atual-txt" data-source="aa_resumo" data-field="trimestre_atual" data-row="0">—</span></div>
+      </div>
+      <p class="ip-muted">Meta mínima por trimestre, em número de áreas (de 19). As áreas apuradas são calculadas a partir do registro de Projetos e ações.</p>
+      <div class="ip-legend">
+        <span><i class="ip-sw" data-c="1"></i>Meta mínima</span>
+        <span><i class="ip-sw" data-c="0"></i>Áreas ativas apuradas</span>
+      </div>
+      <div class="ip-chart ip-short" data-draw="aa-chart" data-source="aa_trimestres" role="img" aria-label="Meta trimestral de áreas com iniciativas ativas em 2027"></div>
+      <h3>Como é calculado</h3>
+      <p class="ip-note">% de áreas = (nº de áreas com pelo menos 1 iniciativa ativa no trimestre ÷ 19 áreas) × 100</p>
+      <div class="ip-sim" id="sim-aa-box">
+        <h3>Simulador do trimestre</h3>
+        <div class="ip-form">
+          <label>Áreas com iniciativa ativa<input type="number" id="sim-a" min="0" max="19" step="1" value="4"></label>
+        </div>
+        <div class="ip-sim-out" data-draw="sim-aa" data-source="areas_ativas"></div>
+      </div>
+      <details id="aa-regras">
+        <summary>Regras de contagem</summary>
+        <ol class="ip-note">
+          <li><b>Iniciativa ativa:</b> registrada com área e gestor responsável, priorizada, e com avanço de etapa ou decisão formal nos últimos 90 dias.</li>
+          <li><b>Abrangência:</b> contam as iniciativas conduzidas pela equipe de inovação.</li>
+          <li><b>Encerramento com aprendizado:</b> a iniciativa encerrada com aprendizado registrado conta como ativa no trimestre da decisão. Assim, não há incentivo para manter iniciativas paradas só para pontuar.</li>
+          <li><b>Iniciativas compartilhadas:</b> contam para cada área que tem gestor responsável registrado.</li>
+          <li><b>Denominador:</b> 19 áreas, uma por gestor, conforme organograma de janeiro de 2027, congelado no ano.</li>
+        </ol>
+      </details>
+      <details id="aa-caminho">
+        <summary>Caminho para obter os dados</summary>
+        <ol class="ip-note">
+          <li>Exportar dos logs do sistema a lista de iniciativas com área, gestor, etapa e data da última mudança de etapa.</li>
+          <li>Filtrar as iniciativas com mudança de etapa ou decisão formal nos últimos 90 dias e validadas pela equipe de inovação.</li>
+          <li>Contar as áreas distintas e aplicar a fórmula.</li>
+        </ol>
+      </details>
+      <details id="aa-ficha">
+        <summary>Ficha do indicador</summary>
+        <div class="ip-wrap"><table>
+          <tbody>
+            <tr><th>Nível (hierarquia)</th><td>Tático</td></tr>
+            <tr><th>Classificação (tipo)</th><td>Processo</td></tr>
+            <tr><th>Finalidade</th><td>Medir a disseminação da inovação entre as áreas da cooperativa, considerando apenas iniciativas em movimento, para que a inovação não fique concentrada em poucas equipes nem parada.</td></tr>
+            <tr><th>Atualização (tolerância)</th><td>10 dias</td></tr>
+            <tr><th>Equipe envolvida</th><td>3</td></tr>
+            <tr><th>Responsáveis</th><td>Gestores responsáveis pelas iniciativas</td></tr>
+            <tr><th>Unidade de medida</th><td>%</td></tr>
+            <tr><th>Fonte de dados</th><td>Logs do sistema</td></tr>
+            <tr><th>Tipo da meta</th><td>Fixa por período</td></tr>
+            <tr><th>Desdobramento</th><td>Consolidado, por área e por origem (iniciativas da equipe de inovação). No painel interno, sem meta oficial: taxa de avanço das iniciativas priorizadas (referência ≥ 60%).</td></tr>
+            <tr><th>Racional da meta</th><td>A rampa considera que o portfólio de iniciativas se amplia ao longo do ano.</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HISTÓRICO ============ -->
+<section class="ip-sec" id="historico" data-sec="historico" hidden="">
+  <p class="ip-lede">Indicadores acompanhados antes do modelo atual, com os métodos e metas da época. Os números não são recalculados: servem para mostrar a trajetória da área e o que aprendemos até chegar aos indicadores estratégicos de hoje.</p>
+  <div class="ip-form">
+    <label>Indicador
+      <select class="dash-select" id="hist-sel" data-draw="hist-sel" data-source="historico_catalogo" aria-label="Indicador anterior"></select>
+    </label>
+  </div>
+  <div class="ip-grid" id="hist-anos" data-draw="hist-anos" data-source="hist_anual"></div>
+  <div class="ip-card" id="hist-evolucao">
+    <h2>Resultado mensal × meta</h2>
+    <div class="ip-legend">
+      <span><i class="ip-sw" data-c="0"></i>Mês na meta</span>
+      <span><i class="ip-sw" data-c="1"></i>Mês abaixo da meta</span>
+      <span>– – Meta mensal</span>
+    </div>
+    <div class="ip-chart" data-draw="hist-chart" data-source="historico_mensal" role="img" aria-label="Resultado mensal e meta do indicador anterior selecionado"></div>
+    <p class="ip-muted">A linha pontilhada vertical separa os anos. Meses sem barra não têm resultado registrado.</p>
+  </div>
+  <div class="ip-two">
+    <div class="ip-card" id="hist-ano-tab">
+      <h3>Consolidado por ano</h3>
+      <div class="ip-wrap"><table data-source="hist_anual" data-row-key="chave">
+        <thead><tr><th data-field="ano">Ano</th><th class="n" data-field="resultado">Resultado</th><th class="n" data-field="meta">Meta</th><th class="n" data-field="atingimento">Atingimento</th><th class="n" data-field="meses_acima">Meses na meta</th><th class="n" data-field="media_mensal">Média mensal</th><th data-field="melhor_mes">Melhor mês</th></tr></thead>
+        <tbody data-draw="hist-tab"></tbody>
+      </table></div>
+    </div>
+    <div class="ip-card" id="hist-ficha">
+      <h3>Sobre este indicador</h3>
+      <div data-draw="hist-info" data-source="historico_catalogo"></div>
+    </div>
+  </div>
+</section>
+
+<details id="notas">
+  <summary>Sobre os dados</summary>
+  <p class="ip-note">Os números vêm de uma cópia das cinco planilhas de acompanhamento enviada em 11/11/2026, sem nomes, contatos ou dados pessoais de alunos e colaboradores. Inova Cast: edições ao vivo com métricas do YouTube. Squads: ciclos 2021 a 2026 da aba Ciclos Consolidados. Impulsiona: indicadores da aba Painel. Para atualizar, envie as planilhas novamente.</p>
+  <p class="ip-note">Os dados de cada gráfico e tabela estão em CSV na pasta <a href="dados/">dados/</a>.</p>
+</details>
+</div>
+
+<script>
+(function(){
+  const L = d3.formatLocale({decimal:',',thousands:'.',grouping:[3],currency:['R$','']});
+  const MES = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  const parse = d3.utcParse('%Y-%m-%d');
+  const ip = window.ip = {
+    int: L.format(',.0f'), dec1: L.format(',.1f'), pct: L.format('.0%'), pct1: L.format('.1%'),
+    num: v => (v === null || v === undefined || v === '') ? NaN : +v,
+    mes: d => MES[d.getUTCMonth()], parse,
+    dm: s => { const d = parse(s); return d ? d3.utcFormat('%d/%m')(d) : s; },
+    ok: id => dash.data(id).status === 'ok',
+    color: i => dash.colors[i % dash.colors.length],
+    META_PRESENCA: 0.75
+  };
+  // tooltip inside a drawing
+  ip.tip = function(el){
+    const t = document.createElement('div'); t.className = 'ip-tip'; t.hidden = true; el.appendChild(t);
+    return {
+      show(ev, lines){
+        t.replaceChildren(...lines.map(([k,v]) => { const p = document.createElement('div'); if (k){ const s = document.createElement('span'); s.className='k'; s.textContent = k + ': '; p.appendChild(s);} p.appendChild(document.createTextNode(v)); return p; }));
+        t.hidden = false;
+        const r = el.getBoundingClientRect(); let x = ev.clientX - r.left + 12, y = ev.clientY - r.top + 12;
+        const w = t.offsetWidth; if (x + w > r.width) x = Math.max(0, ev.clientX - r.left - w - 12);
+        t.style.left = x + 'px'; t.style.top = y + 'px';
+      },
+      hide(){ t.hidden = true; }
+    };
+  };
+  ip.empty = function(el, st){
+    el.replaceChildren();
+    if (st === 'error'){ const p = document.createElement('p'); p.className='ip-muted'; p.textContent = 'Falha ao carregar'; el.appendChild(p); }
+  };
+  // vertical columns: items [{label, segs:[{name,value,ci}], tip:[[k,v]], top?}]
+  ip.columns = function(el, items, o){
+    o = o || {};
+    el.replaceChildren();
+    const W = Math.max(280, el.clientWidth), H = o.height || 230, m = {t: 22, r: 8, b: 26, l: 34};
+    const mode = o.mode || 'stack';
+    const max = d3.max(items, d => mode === 'stack' ? d3.sum(d.segs, s => s.value) : d3.max(d.segs, s => s.value)) || 1;
+    const x = d3.scaleBand().domain(items.map((d,i) => i)).range([m.l, W - m.r]).padding(0.25);
+    const y = d3.scaleLinear().domain([0, max]).nice().range([H - m.b, m.t]);
+    const svg = d3.select(el).append('svg').attr('width', '100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role','img').attr('aria-label', el.getAttribute('aria-label') || '');
+    svg.append('g').selectAll('line').data(y.ticks(4)).join('line').attr('x1', m.l).attr('x2', W - m.r).attr('y1', d => y(d)).attr('y2', d => y(d)).style('stroke', 'var(--cds-chart-grid)');
+    svg.append('g').selectAll('text').data(y.ticks(4)).join('text').attr('x', m.l - 6).attr('y', d => y(d) + 4).attr('text-anchor','end').text(d => ip.int(d));
+    const step = Math.ceil(items.length / Math.max(1, Math.floor((W - m.l) / 44)));
+    svg.append('g').selectAll('text').data(items).join('text').attr('x', (d,i) => x(i) + x.bandwidth()/2).attr('y', H - 8).attr('text-anchor','middle').text((d,i) => i % step === 0 ? d.label : '');
+    const tt = ip.tip(el);
+    const g = svg.append('g').selectAll('g').data(items).join('g');
+    g.each(function(d, i){
+      const gg = d3.select(this); let acc = 0;
+      const n = d.segs.length, bw = mode === 'stack' ? x.bandwidth() : x.bandwidth() / n;
+      d.segs.forEach((s, j) => {
+        const v = s.value || 0; if (v <= 0 && mode === 'stack') return;
+        const x0 = mode === 'stack' ? x(i) : x(i) + j * bw;
+        const y0 = mode === 'stack' ? y(acc + v) : y(v), h = mode === 'stack' ? y(acc) - y(acc + v) : y(0) - y(v);
+        gg.append('rect').attr('x', x0).attr('width', Math.max(1, bw - (mode === 'stack' ? 0 : 1))).attr('y', y0).attr('height', Math.max(0, h)).attr('rx', 2).style('fill', ip.color(s.ci));
+        if (o.labels) {
+          const lx = x0 + Math.max(1, bw - (mode === 'stack' ? 0 : 1)) / 2;
+          const ly = mode === 'stack' ? (h >= 13 ? y0 + h / 2 + 4 : null) : y0 - 4;
+          if (ly !== null) gg.append('text').attr('class', 'ip-seg').attr('x', lx).attr('y', ly).attr('text-anchor', 'middle').text(ip.int(v));
+        }
+        acc += v;
+      });
+      const total = mode === 'stack' ? acc : d3.max(d.segs, s => s.value || 0);
+      if (d.top !== undefined && d.top !== null && !(o.labels && mode !== 'stack')) gg.append('text').attr('class','ip-val').attr('x', x(i) + x.bandwidth()/2).attr('y', y(total) - 5).attr('text-anchor','middle').text(d.top);
+      gg.append('rect').attr('x', x(i) - x.step()*x.padding()/2).attr('width', x.step()).attr('y', m.t).attr('height', H - m.t - m.b).style('fill','transparent')
+        .on('pointermove', ev => tt.show(ev, d.tip)).on('pointerleave', () => tt.hide());
+    });
+  };
+  // horizontal bars: items [{label, value, ci, text, tip}]
+  ip.hbars = function(el, items, o){
+    o = o || {};
+    el.replaceChildren();
+    const W = Math.max(260, el.clientWidth), rowH = 26, m = {t: 6, r: 52, b: 6};
+    const H = m.t + m.b + rowH * items.length;
+    const svg = d3.select(el).append('svg').attr('width','100%').attr('viewBox', `0 0 ${W} ${H}`).attr('role','img').attr('aria-label', el.getAttribute('aria-label') || '');
+    const labs = svg.append('g').selectAll('text').data(items).join('text').attr('class','ip-lab').attr('x', 0).attr('y', (d,i) => m.t + i*rowH + rowH/2 + 4).text(d => d.label);
+    let lw = 0; labs.each(function(){ lw = Math.max(lw, this.getComputedTextLength()); });
+    lw = Math.min(lw + 10, W * 0.5);
+    labs.each(function(d){ let s = d.label; while (this.getComputedTextLength() > lw - 10 && s.length > 4){ s = s.slice(0, -2); this.textContent = s + '…'; } });
+    const max = o.max || d3.max(items, d => d.value) || 1;
+    const meas = svg.append('text').attr('class', 'ip-val');
+    let tw = 0; items.forEach(d => { meas.text(d.text || ''); tw = Math.max(tw, meas.node().getComputedTextLength()); });
+    meas.remove();
+    const x = d3.scaleLinear().domain([0, max]).range([lw, W - Math.max(m.r, tw + 14)]);
+    const tt = ip.tip(el);
+    const g = svg.append('g').selectAll('g').data(items).join('g');
+    g.append('rect').attr('x', lw).attr('y', (d,i) => m.t + i*rowH + 5).attr('height', rowH - 10).attr('width', d => Math.max(1, x(d.value || 0) - lw)).attr('rx', 2).style('fill', d => ip.color(d.ci || 0)).style('opacity', d => o.selected && d.label !== o.selected ? 0.35 : 1);
+    g.append('text').attr('class','ip-val').attr('x', d => x(d.value || 0) + 6).attr('y', (d,i) => m.t + i*rowH + rowH/2 + 4).text(d => d.text);
+    g.append('rect').attr('x', 0).attr('width', W).attr('y', (d,i) => m.t + i*rowH).attr('height', rowH).style('fill','transparent')
+      .on('pointermove', (ev, d) => tt.show(ev, d.tip)).on('pointerleave', () => tt.hide())
+      .on('click', (ev, d) => { if (o.onClick) o.onClick(d); }).style('cursor', o.onClick ? 'pointer' : null);
+    if (o.ref !== undefined){
+      svg.append('line').attr('x1', x(o.ref)).attr('x2', x(o.ref)).attr('y1', 0).attr('y2', H).style('stroke','var(--cds-chart-reference)').style('stroke-dasharray','4 3');
+    }
+  };
+  ip.cell = function(tr, text, cls){ const td = document.createElement('td'); if (cls) td.className = cls; td.textContent = text; tr.appendChild(td); return td; };
+  ip.pill = function(td, text, kind){ td.replaceChildren(); const s = document.createElement('span'); s.className = 'ip-pill ip-' + kind; s.textContent = text; td.appendChild(s); };
+  // a number drawing helper
+  ip.drawNum = function(name, id, getter, fmt){
+    dash.draw(name, el => {
+      const d = dash.data(id);
+      if (d.status !== 'ok'){ el.textContent = '—'; if (d.status !== 'loading') el.classList.remove('dash-skeleton'); return; }
+      const v = getter(d.data);
+      el.textContent = (v === null || v === undefined || Number.isNaN(v)) ? '—' : fmt(v);
+      el.classList.remove('dash-skeleton');
+    });
+  };
+})();
+</script>
+
+<script>
+// ---------- calcs ----------
+dash.calc('ic_resumo', {
+  title: 'Inova Cast: resumo de 2026',
+  description: 'Totais das edições ao vivo com métricas do YouTube.',
+  inputs: ['inovacast'],
+  fn: (episodios) => {
+    const feitos = episodios.filter(e => e.situacao === 'Realizado');
+    const soma = c => feitos.reduce((a, e) => a + (+e[c] || 0), 0);
+    const views = soma('visualizacoes');
+    return [{
+      episodios: feitos.length,
+      especiais: feitos.filter(e => e.tipo === 'Especial Squads').length,
+      visualizacoes: views,
+      media_views: feitos.length ? Math.round(views / feitos.length) : null,
+      interacoes: soma('gostei') + soma('chat'),
+      novos_assinantes: soma('novos_assinantes'),
+      nao_realizados: episodios.filter(e => ['Feriado','Cancelado','Evento institucional'].includes(e.situacao)).length
+    }];
+  }
+});
+dash.calc('ic_class', {
+  title: 'Inova Cast: média por tipo de convidado',
+  description: 'Média de visualizações das edições ao vivo por tipo de convidado.',
+  inputs: ['inovacast'],
+  fn: (episodios) => {
+    const feitos = episodios.filter(e => e.situacao === 'Realizado');
+    const grupo = e => e.tipo === 'Especial Squads' ? 'Especial Squads' : (e.classificacao === 'Externo' ? 'Convidado externo' : 'Convidado interno');
+    return ['Convidado interno','Convidado externo','Especial Squads'].map(g => {
+      const xs = feitos.filter(e => grupo(e) === g);
+      return {tipo: g, edicoes: xs.length, media_views: xs.length ? Math.round(xs.reduce((a, e) => a + (+e.visualizacoes || 0), 0) / xs.length) : 0};
+    });
+  }
+});
+dash.calc('sq_resumo', {
+  title: 'Squads: resumo histórico',
+  description: 'Totais dos ciclos 2021 a 2026 e horas de capacitação do ciclo 2026.',
+  inputs: ['squads_ciclos', 'squads_capacitacao'],
+  fn: (ciclos, capacitacao) => {
+    const s = c => ciclos.reduce((a, r) => a + (+r[c] || 0), 0);
+    const desafios = s('desafios'), implantadas = s('implantadas');
+    return [{
+      ciclos: ciclos.length, desafios, implantadas,
+      taxa: desafios ? implantadas / desafios : null,
+      participacoes: s('participacoes'), concluiram: s('concluiram'),
+      horas_capacitacao: Math.round(capacitacao.reduce((a, r) => a + (+r.horas || 0), 0) * 10) / 10,
+      encontros: capacitacao.length
+    }];
+  }
+});
+dash.calc('sq_status', {
+  title: 'Squads: soluções por status',
+  description: 'Quantidade de soluções de todos os ciclos em cada status.',
+  inputs: ['squads_solucoes'],
+  fn: (solucoes) => ['Implantada','Em andamento','Não iniciada','Cancelada'].map(st => ({status: st, solucoes: solucoes.filter(r => r.status === st).length}))
+});
+dash.calc('st_resumo', {
+  title: 'Startups: total e temas',
+  description: 'Quantidade de startups mapeadas e de temas distintos.',
+  inputs: ['startups'],
+  fn: (startups) => [{startups: startups.length, temas: new Set(startups.map(r => r.tema)).size}]
+});
+dash.calc('st_temas', {
+  title: 'Startups por tema',
+  description: 'Quantidade de startups mapeadas em cada tema de solução.',
+  inputs: ['startups'],
+  fn: (startups) => {
+    const m = new Map(); startups.forEach(r => m.set(r.tema, (m.get(r.tema) || 0) + 1));
+    return [...m].map(([tema, n]) => ({tema, startups: n})).sort((a, b) => b.startups - a.startups);
+  }
+});
+dash.calc('td_resumo', {
+  title: 'Tempo Devolvido: progresso e ritmo',
+  description: 'Horas devolvidas que contam (validadas e com evidência) a partir do registro de Projetos e ações, percentual da meta e ritmo necessário em 2027.',
+  inputs: ['tempo_devolvido', 'projetos'],
+  fn: (status, projetos) => {
+    const meta = +((status.find(r => r.indicador === 'meta_horas') || {}).valor) || 0;
+    const reais = projetos.filter(p => p.id && p.nome && !/^EXEMPLO/i.test(p.nome));
+    const horas = p => Math.max(0, ((+p.tempo_antes_min || 0) - (+p.tempo_depois_min || 0)) * (+p.volume_acumulado || 0) / 60);
+    const contam = reais.filter(p => p.validado === 'Sim' && !!p.evidencia && !/estimativa/i.test(p.evidencia));
+    const h = contam.reduce((a, p) => a + horas(p), 0);
+    const pendentes = reais.filter(p => !contam.includes(p)).reduce((a, p) => a + horas(p), 0);
+    return [{horas_validadas: Math.round(h), horas_pendentes: Math.round(pendentes), cadastradas: reais.length, validadas: contam.length,
+      percentual: meta ? h / meta : null, horas_por_mes: meta ? Math.round(Math.max(0, meta - h) / 12) : null}];
+  }
+});
+dash.calc('pulso', {
+  title: 'Atividades realizadas por mês',
+  description: 'Edições do Inova Cast, reuniões realizadas do Impulsiona e encontros de capacitação dos Squads em cada mês de 2026.',
+  inputs: ['inovacast', 'impulsiona_reunioes', 'squads_capacitacao'],
+  fn: (episodios, reunioes, capacitacao) => {
+    const meses = Array.from({length: 12}, (_, i) => i + 1).map(m => '2026-' + String(m).padStart(2, '0'));
+    const conta = (rows, ok) => meses.map(mes => rows.filter(r => ok(r) && String(r.data).slice(0, 7) === mes).length);
+    const a = conta(episodios, r => r.situacao === 'Realizado' || r.situacao === 'Realizado sem métricas');
+    const b = conta(reunioes, r => r.situacao === 'Realizada');
+    const c = conta(capacitacao, () => true);
+    return meses.map((mes, i) => ({mes, inova_cast: a[i], impulsiona: b[i], squads: c[i], total: a[i] + b[i] + c[i]}));
+  }
+});
+dash.calc('alertas', {
+  title: 'Pontos de atenção',
+  description: 'Sinais de saúde de cada programa comparados à referência da própria planilha.',
+  inputs: ['squads_ciclos', 'impulsiona_indicadores', 'impulsiona_grupos', 'ic_resumo', 'td_resumo'],
+  fn: (ciclos, indicadores, grupos, inovaCast, tempo) => {
+    const pct = v => Math.round(v * 100) + '%';
+    const ind = (k, c) => +((indicadores.find(r => r.indicador === k) || {})[c]);
+    const c25 = ciclos.find(r => r.ano === '2025') || {};
+    const taxa25 = (+c25.implantadas || 0) / (+c25.desafios || 1), meta = +c25.meta_implantacao || 0.3;
+    const presMei = ind('Presença média', 'mei_u');
+    const semReuniao = grupos.filter(g => /Sem reuni/.test(g.acompanhamento || '')).length;
+    const abaixo = ind('Participações abaixo da meta de presença', 'total');
+    const ic = (inovaCast && inovaCast[0]) || {};
+    const cad = +(((tempo || [])[0] || {}).cadastradas) || 0;
+    return [
+      {programa: 'Squads', sinal: 'Taxa de implantação do ciclo 2025', valor_txt: pct(taxa25), referencia_txt: 'meta ' + pct(meta), situacao: taxa25 >= meta ? 'ok' : 'abaixo'},
+      {programa: 'Impulsiona', sinal: 'Presença média nos projetos MEI-U', valor_txt: pct(presMei), referencia_txt: 'meta ' + pct(window.ip.META_PRESENCA), situacao: presMei >= window.ip.META_PRESENCA ? 'ok' : 'abaixo'},
+      {programa: 'Impulsiona', sinal: 'Participações abaixo da meta de presença', valor_txt: String(abaixo), referencia_txt: '0', situacao: abaixo > 0 ? 'atenção' : 'ok'},
+      {programa: 'Impulsiona', sinal: 'Grupos em andamento sem reunião registrada', valor_txt: String(semReuniao), referencia_txt: '0', situacao: semReuniao > 0 ? 'atenção' : 'ok'},
+      {programa: 'Inova Cast', sinal: 'Média de visualizações por edição', valor_txt: String(ic.media_views ?? '—'), referencia_txt: '—', situacao: 'acompanhar'},
+      {programa: 'Tempo Devolvido', sinal: 'Inovações cadastradas para 2027', valor_txt: String(cad), referencia_txt: 'apuração em jan/2027', situacao: cad > 0 ? 'ok' : 'atenção'}
+    ];
+  }
+});
+</script>
+
+<script>
+// ---------- tabs + legend colors (listen / set attributes only) ----------
+(function(){
+  const tabs = document.querySelectorAll('.ip-tab');
+  const secs = document.querySelectorAll('[data-sec]');
+  function open(name){
+    tabs.forEach(t => t.setAttribute('aria-selected', String(t.dataset.tab === name)));
+    secs.forEach(s => { s.hidden = s.dataset.sec !== name; });
+    dash.setLink(name);
+  }
+  tabs.forEach(t => t.addEventListener('click', () => open(t.dataset.tab)));
+  const h = (location.hash || '').slice(1);
+  if (h && document.querySelector('[data-sec="' + h + '"]')) open(h);
+  document.querySelectorAll('.ip-sw').forEach(s => { s.style.background = window.ip.color(+s.dataset.c); });
+})();
+</script>
+
+<script>
+// ---------- drawings: visão do ano ----------
+(function(){
+  const ip = window.ip;
+  const row0 = rows => rows && rows[0] ? rows[0] : {};
+  const where = (k, v) => rows => rows.find(r => r[k] === v) || {};
+  ip.drawNum('l-ep', 'ic_resumo', r => row0(r).episodios, ip.int);
+  ip.drawNum('l-des', 'squads_ciclos', r => +where('ano','2026')(r).desafios, ip.int);
+  ip.drawNum('l-alu', 'impulsiona_indicadores', r => +where('indicador','Alunos únicos')(r).total, ip.int);
+  ip.drawNum('l-st', 'st_resumo', r => row0(r).startups, ip.int);
+  ip.drawNum('c-ic', 'ic_resumo', r => row0(r).visualizacoes, ip.int);
+  ip.drawNum('c-st', 'st_resumo', r => row0(r).startups, ip.int);
+  ip.drawNum('c-td', 'tempo_devolvido', r => +where('indicador','meta_horas')(r).valor, ip.int);
+
+  dash.draw('alertas', tb => {
+    const d = dash.data('alertas');
+    tb.replaceChildren();
+    if (d.status !== 'ok' || !d.data) return;
+    d.data.forEach(r => {
+      const tr = document.createElement('tr'); tr.dataset.key = encodeURIComponent(r.sinal);
+      ip.cell(tr, r.programa); ip.cell(tr, r.sinal); ip.cell(tr, r.valor_txt, 'n'); ip.cell(tr, r.referencia_txt, 'n');
+      const kind = r.situacao === 'ok' ? 'ok' : (r.situacao === 'abaixo' ? 'bad' : 'warn');
+      ip.pill(ip.cell(tr, ''), r.situacao, kind);
+      tb.appendChild(tr);
+    });
+  });
+})();
+</script>
+
+<script>
+// ---------- drawings: Inova Cast ----------
+(function(){
+  const ip = window.ip;
+  const r0 = r => (r && r[0]) || {};
+  ip.drawNum('ic-ep', 'ic_resumo', r => r0(r).episodios, ip.int);
+  ip.drawNum('ic-esp', 'ic_resumo', r => r0(r).especiais, ip.int);
+  ip.drawNum('ic-v', 'ic_resumo', r => r0(r).visualizacoes, ip.int);
+  ip.drawNum('ic-m', 'ic_resumo', r => r0(r).media_views, ip.int);
+  ip.drawNum('ic-i', 'ic_resumo', r => r0(r).interacoes, ip.int);
+  ip.drawNum('ic-a', 'ic_resumo', r => r0(r).novos_assinantes, ip.int);
+  ip.drawNum('ic-c', 'ic_resumo', r => r0(r).nao_realizados, ip.int);
+
+  dash.draw('ic-chart', el => {
+    const d = dash.data('inovacast');
+    if (d.status !== 'ok'){ ip.empty(el, d.status); return; }
+    const rows = d.data.filter(e => e.situacao === 'Realizado');
+    const ci = e => e.tipo === 'Especial Squads' ? 2 : (e.classificacao === 'Externo' ? 1 : 0);
+    const items = rows.map(e => ({
+      label: ip.dm(e.data),
+      segs: [{value: +e.visualizacoes, ci: ci(e)}],
+      top: ip.int(+e.visualizacoes),
+      tip: [['', ip.dm(e.data) + (e.ep ? ' · EP ' + e.ep : ' · Especial Squads')], ['', e.tema], ['Visualizações', ip.int(+e.visualizacoes)], ['Pico simultâneo', ip.int(+e.pico_simultaneo || 0)], ['Gostei', ip.int(+e.gostei || 0)], ['Chat', ip.int(+e.chat || 0)]]
+    }));
+    ip.columns(el, items, {mode: 'stack', height: 240});
+  });
+
+  dash.draw('ic-class', el => {
+    const d = dash.data('ic_class');
+    if (d.status !== 'ok' || !d.data){ ip.empty(el, d.status); return; }
+    ip.hbars(el, d.data.map((r, i) => ({label: r.tipo, value: r.media_views, ci: i, text: ip.int(r.media_views), tip: [['', r.tipo], ['Edições', String(r.edicoes)], ['Média de views', ip.int(r.media_views)]]})));
+  });
+
+  dash.draw('ic-top', tb => {
+    const d = dash.data('inovacast');
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    d.data.filter(e => e.situacao === 'Realizado').sort((a, b) => +b.visualizacoes - +a.visualizacoes).slice(0, 5).forEach(e => {
+      const tr = document.createElement('tr'); tr.dataset.key = e.data;
+      ip.cell(tr, ip.dm(e.data)); ip.cell(tr, e.tema); ip.cell(tr, ip.int(+e.visualizacoes), 'n');
+      tb.appendChild(tr);
+    });
+  });
+})();
+</script>
+
+<script>
+// ---------- drawings: Squads ----------
+(function(){
+  const ip = window.ip;
+  const r0 = r => (r && r[0]) || {};
+  ip.drawNum('sq-d', 'sq_resumo', r => r0(r).desafios, ip.int);
+  ip.drawNum('sq-c', 'sq_resumo', r => r0(r).ciclos, ip.int);
+  ip.drawNum('sq-i', 'sq_resumo', r => r0(r).implantadas, ip.int);
+  ip.drawNum('sq-t', 'sq_resumo', r => r0(r).taxa, ip.pct1);
+  ip.drawNum('sq-meta', 'squads_ciclos', r => +((r.find(x => x.ano === '2026') || {}).meta_implantacao), ip.pct);
+  ip.drawNum('sq-p', 'sq_resumo', r => r0(r).participacoes, ip.int);
+  ip.drawNum('sq-co', 'sq_resumo', r => r0(r).concluiram, ip.int);
+  ip.drawNum('sq-h', 'sq_resumo', r => r0(r).horas_capacitacao, ip.dec1);
+  ip.drawNum('sq-hr', 'sq_resumo', r => r0(r).encontros, ip.int);
+
+  dash.draw('sq-chart', el => {
+    const d = dash.data('squads_ciclos');
+    if (d.status !== 'ok'){ ip.empty(el, d.status); return; }
+    const items = d.data.map(r => {
+      const des = +r.desafios, imp = +r.implantadas, tx = des ? imp / des : 0;
+      return {label: r.ano, segs: [{value: des, ci: 0}, {value: imp, ci: 1}], top: ip.pct(tx),
+        tip: [['', 'Ciclo ' + r.ano], ['Desafios', String(des)], ['Implantadas', String(imp)], ['Taxa', ip.pct(tx)], ['Meta', ip.pct(+r.meta_implantacao)]]};
+    });
+    ip.columns(el, items, {mode: 'group'});
+  });
+
+  dash.draw('sq-status', el => {
+    const d = dash.data('sq_status');
+    if (d.status !== 'ok' || !d.data){ ip.empty(el, d.status); return; }
+    const ci = {'Implantada': 0, 'Em andamento': 1, 'Não iniciada': 3, 'Cancelada': 4};
+    ip.hbars(el, d.data.map(r => ({label: r.status, value: r.solucoes, ci: ci[r.status], text: String(r.solucoes), tip: [['', r.status], ['Soluções', String(r.solucoes)]]})));
+  });
+
+  dash.draw('sq-part', el => {
+    const d = dash.data('squads_ciclos');
+    if (d.status !== 'ok'){ ip.empty(el, d.status); return; }
+    ip.hbars(el, d.data.map(r => ({label: r.ano, value: +r.participacoes, ci: 0, text: r.participacoes + ' · ' + r.concluiram + ' concluíram',
+      tip: [['', 'Ciclo ' + r.ano], ['Participações', r.participacoes], ['Ainda ativos na cooperativa', r.ativos], ['Concluíram o ciclo', r.concluiram]]})));
+  });
+
+  dash.draw('sq-reports', tb => {
+    const d = dash.data('squads_reports');
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    d.data.slice().sort((a, b) => +b.nota_final - +a.nota_final).forEach(r => {
+      const tr = document.createElement('tr');
+      ip.cell(tr, r.squad); ip.cell(tr, r.sprint_30, 'n'); ip.cell(tr, r.sprint_60, 'n'); ip.cell(tr, r.sprint_90, 'n'); ip.cell(tr, r.nota_final, 'n');
+      tb.appendChild(tr);
+    });
+  });
+
+  dash.draw('sq-sol', tb => {
+    const d = dash.data('squads_solucoes');
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    const kind = {'Implantada': 'ok', 'Em andamento': 'warn', 'Não iniciada': 'warn', 'Cancelada': 'bad'};
+    d.data.slice().sort((a, b) => +b.ano - +a.ano).forEach(r => {
+      const tr = document.createElement('tr');
+      ip.cell(tr, r.ano); ip.cell(tr, r.squad); ip.cell(tr, r.solucao || 'Em definição'); ip.cell(tr, r.estabelecimento || '');
+      ip.pill(ip.cell(tr, ''), r.status, kind[r.status] || 'warn');
+      tb.appendChild(tr);
+    });
+  });
+})();
+</script>
+
+<script>
+// ---------- drawings: Impulsiona ----------
+(function(){
+  const ip = window.ip;
+  const w = k => rows => rows.find(r => r.indicador === k) || {};
+  ip.drawNum('im-a', 'impulsiona_indicadores', r => +w('Alunos únicos')(r).total, ip.int);
+  ip.drawNum('im-pt', 'impulsiona_indicadores', r => +w('Participações (aluno × grupo)')(r).total, ip.int);
+  ip.drawNum('im-pm', 'impulsiona_indicadores', r => +w('Presença média')(r).mei_u, ip.pct);
+  ip.drawNum('im-pe', 'impulsiona_indicadores', r => +w('Presença média')(r).extensao, ip.pct);
+  ip.drawNum('im-ev', 'impulsiona_indicadores', r => +w('Taxa de evasão')(r).mei_u, ip.pct);
+  ip.drawNum('im-in', 'impulsiona_indicadores', r => +w('Participações inativas (saíram)')(r).mei_u, ip.int);
+  dash.draw('im-meta', el => { el.textContent = ip.pct(ip.META_PRESENCA); });
+
+  dash.draw('im-chart', el => {
+    const d = dash.data('impulsiona_grupos');
+    if (d.status !== 'ok'){ ip.empty(el, d.status); return; }
+    const rows = d.data.filter(g => g.presenca !== null && g.presenca !== '' && !isNaN(+g.presenca)).sort((a, b) => +b.presenca - +a.presenca);
+    ip.hbars(el, rows.map(g => ({label: g.codigo + ' · ' + g.projeto, value: +g.presenca, ci: +g.presenca >= ip.META_PRESENCA ? 0 : 3, text: ip.pct(+g.presenca),
+      tip: [['', g.projeto], ['Modalidade', g.modalidade], ['Semestre', g.semestre], ['Área demandante', g.area_demandante], ['Reuniões realizadas', g.reunioes_realizadas], ['Presença', ip.pct(+g.presenca)]]})), {max: 1, ref: ip.META_PRESENCA});
+  });
+
+  dash.draw('im-ind', tb => {
+    const d = dash.data('impulsiona_indicadores');
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    const isPct = k => /Taxa|Presença média|NDA/.test(k);
+    const f = (k, v) => (v === null || v === '' || v === undefined) ? '—' : (isPct(k) ? ip.pct(+v) : ip.int(+v));
+    d.data.forEach(r => {
+      const tr = document.createElement('tr');
+      ip.cell(tr, r.indicador); ip.cell(tr, f(r.indicador, r.mei_u), 'n'); ip.cell(tr, f(r.indicador, r.extensao), 'n'); ip.cell(tr, f(r.indicador, r.total), 'n');
+      tb.appendChild(tr);
+    });
+  });
+
+  dash.draw('im-grp', tb => {
+    const d = dash.data('impulsiona_grupos');
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    d.data.forEach(g => {
+      const tr = document.createElement('tr');
+      ip.cell(tr, g.codigo); ip.cell(tr, g.projeto); ip.cell(tr, g.semestre); ip.cell(tr, g.reunioes_realizadas, 'n');
+      const td = ip.cell(tr, '');
+      if (g.acompanhamento) ip.pill(td, g.acompanhamento, 'warn');
+      tb.appendChild(tr);
+    });
+  });
+})();
+</script>
+
+<script>
+// ---------- drawings: Startups + Tempo Devolvido ----------
+(function(){
+  const ip = window.ip;
+  dash.draw('st-chart', el => {
+    const d = dash.data('st_temas');
+    if (d.status !== 'ok' || !d.data){ ip.empty(el, d.status); return; }
+    ip.hbars(el, d.data.map(r => ({label: r.tema, value: r.startups, ci: 0, text: String(r.startups), tip: [['', r.tema], ['Startups', String(r.startups)]]})));
+  });
+  dash.draw('st-tab', tb => {
+    const d = dash.data('startups');
+    tb.replaceChildren();
+    if (d.status !== 'ok') return;
+    d.data.slice().sort((a, b) => a.tema.localeCompare(b.tema) || a.startup.localeCompare(b.startup)).forEach(r => {
+      const tr = document.createElement('tr');
+      ip.cell(tr, r.id); ip.cell(tr, r.startup); ip.cell(tr, r.solucao); ip.cell(tr, r.tema);
+      tb.appendChild(tr);
+    });
+  });
+  const v = k => rows => +((rows.find(r => r.indicador === k) || {}).valor);
+  ip.drawNum('td-m', 'tempo_devolvido', v('meta_horas'), ip.int);
+  ip.drawNum('td-h', 'td_resumo', r => (r && r[0] || {}).horas_validadas, ip.int);
+  ip.drawNum('td-c', 'td_resumo', r => (r && r[0] || {}).cadastradas, ip.int);
+  ip.drawNum('td-r', 'td_resumo', r => (r && r[0] || {}).horas_por_mes, ip.int);
+  ip.drawNum('td-p', 'td_resumo', r => (r && r[0] || {}).percentual, ip.pct1);
+  dash.draw('td-bar', el => {
+    const d = dash.data('td_resumo');
+    const p = d.status === 'ok' && d.data && d.data[0] ? Math.max(0, Math.min(1, +d.data[0].percentual || 0)) : 0;
+    el.style.width = (p * 100) + '%';
+  });
+})();
+</script>
+
+<script>
+// ---------- Áreas com Iniciativas Ativas (2027) ----------
+dash.calc('aa_resumo', {
+  title: 'Áreas ativas: último trimestre apurado',
+  description: 'Percentual de áreas com iniciativa ativa no trimestre mais recente com iniciativas no registro de Projetos e ações.',
+  inputs: ['aa_trimestres'],
+  fn: (trimestres) => {
+    const apurados = (trimestres || []).filter(t => t.iniciativas_ativas > 0);
+    const ult = apurados[apurados.length - 1];
+    if (!ult) return [{trimestre_atual: 'sem apuração · começa no 1º tri/2027', pct_atual: null, areas_atuais: null}];
+    return [{trimestre_atual: ult.trimestre + '/2027 · ' + ult.areas_ativas + ' de ' + ult.total_areas + ' áreas', pct_atual: +ult.areas_ativas / +ult.total_areas, areas_atuais: +ult.areas_ativas}];
+  }
+});
+(function(){
+  const ip = window.ip;
+  const q4 = rows => rows.find(r => r.trimestre === '4º tri') || {};
+  ip.drawNum('aa-meta', 'areas_ativas', r => +q4(r).meta_pct, ip.pct);
+  ip.drawNum('aa-meta-n', 'areas_ativas', r => +q4(r).meta_areas, ip.int);
+  ip.drawNum('aa-tot', 'areas_ativas', r => +q4(r).total_areas, ip.int);
+  ip.drawNum('c-aa', 'areas_ativas', r => +q4(r).meta_pct, ip.pct);
+  ip.drawNum('aa-atual', 'aa_resumo', r => (r && r[0] || {}).pct_atual, ip.pct);
+  dash.draw('aa-atual-txt', el => {
+    const d = dash.data('aa_resumo');
+    el.textContent = d.status === 'ok' && d.data && d.data[0] ? ' ' + d.data[0].trimestre_atual : '—';
+  });
+  dash.draw('aa-chart', el => {
+    const d = dash.data('aa_trimestres');
+    if (d.status !== 'ok' || !d.data){ ip.empty(el, d.status); return; }
+    const items = d.data.map(t => {
+      const real = t.iniciativas_ativas > 0 ? +t.areas_ativas : null;
+      return {label: t.trimestre, segs: [{value: +t.meta_areas, ci: 1}, {value: real || 0, ci: 0}], top: ip.pct(+t.meta_pct),
+        tip: [['', t.trimestre + '/2027'], ['Meta mínima', ip.pct(+t.meta_pct) + ' (' + t.meta_areas + ' de ' + t.total_areas + ')'], ['Apurado', real === null ? 'ainda não apurado' : real + ' de ' + t.total_areas + ' áreas']]};
+    });
+    ip.columns(el, items, {mode: 'group', height: 190});
+  });
+})();
+</script>
+
+<script>
+// ---------- Impacto, funil e evolução ----------
+dash.calc('impacto', {
+  title: 'Impacto acumulado da inovação',
+  description: 'Soluções implantadas e com uso confirmado, unidades atendidas, crescimento do Impulsiona e áreas demandantes em 2026.',
+  inputs: ['squads_solucoes', 'impulsiona_semestres', 'impulsiona_grupos'],
+  fn: (solucoes, semestres, grupos) => {
+    const imp = solucoes.filter(s => s.status === 'Implantada');
+    const emUso = imp.filter(s => /em uso/i.test(s.observacao || ''));
+    const sem = k => +((semestres.find(r => r.semestre === k) || {}).total);
+    const atual = sem('2ºS/2026'), anterior = sem('2ºS/2025');
+    const areas26 = new Set(grupos.filter(g => /2026/.test(g.semestre)).map(g => g.area_demandante));
+    return [{
+      implantadas: imp.length,
+      em_uso: emUso.length,
+      estabelecimentos: new Set(imp.map(s => s.estabelecimento)).size,
+      cresc_impulsiona: anterior ? (atual - anterior) / anterior : null,
+      areas_impulsiona_2026: areas26.size
+    }];
+  }
+});
+(function(){
+  const ip = window.ip;
+  const r0 = r => (r && r[0]) || {};
+  const sem = k => rows => +((rows.find(r => r.semestre === k) || {}).total);
+  const pes = rows => +((rows.find(r => r.indicador === 'pessoas_unicas') || {}).valor);
+  ip.drawNum('l-imp', 'impacto', r => r0(r).implantadas, ip.int);
+  ip.drawNum('l-pes', 'squads_pessoas', pes, ip.int);
+  ip.drawNum('l-alu2', 'impulsiona_semestres', sem('2ºS/2026'), ip.int);
+  ip.drawNum('h-imp', 'impacto', r => r0(r).implantadas, ip.int);
+  ip.drawNum('h-uso', 'impacto', r => r0(r).em_uso, ip.int);
+  ip.drawNum('h-est', 'impacto', r => r0(r).estabelecimentos, ip.int);
+  ip.drawNum('h-pes', 'squads_pessoas', pes, ip.int);
+  ip.drawNum('h-cic', 'sq_resumo', r => r0(r).ciclos, ip.int);
+  ip.drawNum('h-alu', 'impulsiona_semestres', sem('2ºS/2026'), ip.int);
+  ip.drawNum('h-are', 'impacto', r => r0(r).areas_impulsiona_2026, ip.int);
+  const META_IMPL = 0.3;
+  dash.draw('h-imp-d', el => {
+    const d = dash.data('sq_resumo');
+    if (d.status !== 'ok' || !d.data || !d.data[0]){ el.textContent = '—'; return; }
+    const t = +d.data[0].taxa;
+    el.textContent = (t >= META_IMPL ? '▲ ' : '▼ ') + 'taxa de ' + ip.pct1(t) + ' dos desafios · meta ' + ip.pct(META_IMPL);
+    el.classList.toggle('ip-up', t >= META_IMPL); el.classList.toggle('ip-down', t < META_IMPL);
+  });
+  dash.draw('h-alu-d', el => {
+    const d = dash.data('impacto');
+    if (d.status !== 'ok' || !d.data || !d.data[0] || d.data[0].cresc_impulsiona === null){ el.textContent = '—'; return; }
+    const c = +d.data[0].cresc_impulsiona;
+    el.textContent = (c >= 0 ? '▲ +' : '▼ ') + ip.pct(c) + ' vs. 2º semestre de 2025';
+    el.classList.toggle('ip-up', c >= 0); el.classList.toggle('ip-down', c < 0);
+  });
+
+
+  dash.draw('evo-sq', el => {
+    const d = dash.data('squads_ciclos');
+    if (d.status !== 'ok'){ ip.empty(el, d.status); return; }
+    ip.columns(el, d.data.map(r => ({label: r.ano, segs: [{value: +r.participacoes, ci: 0}, {value: +r.desafios, ci: 1}], top: r.participacoes,
+      tip: [['', 'Ciclo ' + r.ano], ['Participações', r.participacoes], ['Desafios', r.desafios], ['Implantadas', r.implantadas]]})), {mode: 'group', height: 190, labels: true});
+  });
+
+  dash.draw('evo-im', el => {
+    const d = dash.data('impulsiona_semestres');
+    if (d.status !== 'ok'){ ip.empty(el, d.status); return; }
+    const rows = d.data.slice().sort((a, b) => +a.ordem - +b.ordem);
+    ip.columns(el, rows.map(r => ({label: r.semestre, segs: [{value: +r.mei_u, ci: 0}, {value: +r.extensao, ci: 1}], top: r.total,
+      tip: [['', r.semestre], ['MEI-U', r.mei_u], ['Extensão', r.extensao], ['Total', r.total]]})), {mode: 'stack', height: 190, labels: true});
+  });
+
+  document.querySelectorAll('.ip-hero').forEach((c, i) => { c.style.borderTopColor = ip.color(i); });
+})();
+</script>
+<script src="interacoes.js"></script>
+<script src="projetos.js"></script>
+<script src="historico.js"></script>
+<script src="scorecard.js"></script>
+<script src="radar.js"></script>
+
+</body>
+</html>
